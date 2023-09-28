@@ -1,0 +1,4 @@
+@import 'searcher.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

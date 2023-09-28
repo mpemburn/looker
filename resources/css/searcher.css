@@ -1,0 +1,45 @@
+a.nav-item {
+    text-decoration: none;
+    margin-right: 1rem;
+}
+
+button.btn {
+    position: relative;
+    top: -1px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+button.btn:hover {
+    background-color: #0000ee;
+}
+
+#date_range {
+    display: none;
+}
+
+#error {
+    font-size: 10pt;
+    color: red;
+}
+
+div.content {
+    top: 4.5rem;
+    margin: 2rem;
+}
+
+#subsites_to,
+#subsites_from {
+    min-width: 100%;
+}
+
+option {
+    color: #000;
+}
+
+input[type=search] {
+    outline-offset: 0;
+}
+
+div.hidden {
+    display: none;
+}
