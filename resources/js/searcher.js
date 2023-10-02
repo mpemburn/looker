@@ -34,7 +34,7 @@ $(document).ready(function ($) {
                 evt.preventDefault();
                 let formData = $('#search_form').serialize();
 
-                self.loading.removeClass('d-none');
+                self.loading.removeClass('hidden');
                 self.found.html('');
                 self.results.html('');
 
@@ -46,7 +46,7 @@ $(document).ready(function ($) {
                     data: formData,
                     processData: false,
                     success: function (data) {
-                        self.loading.addClass('d-none');
+                        self.loading.addClass('hidden');
                         self.found.html('<strong>Total Found: ' + data.found + '</strong>');
                         if (data.found > 0) {
                             self.results.html(data.html);
@@ -54,7 +54,7 @@ $(document).ready(function ($) {
                         console.log(data);
                     },
                     error: function (msg) {
-                        self.loading.addClass('d-none');
+                        self.loading.addClass('hidden');
                         console.log(msg);
                     }
                 });

@@ -5,10 +5,10 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+    <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
         <div class="p-2 mt-6 bg-white overflow-hidden shadow rounded">
             <div class="">
-                <div class="p-6">
+                <div class="p-2">
                     <form id="search_form">
                         @if (env('INSTALLED_TEST_DATABASES'))
                             <div>

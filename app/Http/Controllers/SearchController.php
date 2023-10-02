@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Factories\SearcherFactory;
 use App\Services\DatabaseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
@@ -24,7 +25,9 @@ class SearchController extends Controller
         if (! $database) {
             return response()->json(['error' => 'No Database']);;
         }
+
         DatabaseService::setDb($database);
+
         $searchType = request('type');
         $searchText = request('text');
         if ($searchType && $searchText) {

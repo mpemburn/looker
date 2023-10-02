@@ -6,6 +6,7 @@ use App\Interfaces\SearcherInterface;
 use App\Models\Blog;
 use App\Models\Option;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 

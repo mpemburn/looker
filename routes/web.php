@@ -1,7 +1,9 @@
 <?php
 
+use App\Factories\SearcherFactory;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Services\DatabaseService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +22,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dev', function () {
+    DatabaseService::setDb('www_clarku');
+    $searcher = SearcherFactory::build('posts');
+    $html = $searcher->run('food')->render();
+    echo $html;
 
 });
 
@@ -32,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/search', [SearchController::class, 'search'])->name('search');
-    Route::post('/do_search', [SearchController::class, 'index']);
 });
+Route::post('/do_search', [SearchController::class, 'index']);
 
 require __DIR__.'/auth.php';

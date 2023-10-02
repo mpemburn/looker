@@ -32,6 +32,10 @@ div.content {
     min-width: 100%;
 }
 
+#loading {
+    display: inline-block;
+}
+
 option {
     color: #000;
 }
@@ -40,6 +44,11 @@ input[type=search] {
     outline-offset: 0;
 }
 
-div.hidden {
-    display: none;
+div.hidden,
+img.hidden {
+    visibility: hidden;
+}
+
+td {
+    font-size: 11pt;
 }
