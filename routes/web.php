@@ -22,9 +22,9 @@ Route::get('/', function () {
 });
 
 Route::get('/dev', function () {
-    Database::setDb('sites_clarku');
-    $searcher = SearcherFactory::build('posts');
-    $html = $searcher->run('food')->render();
+    Database::setDb('www_clarku');
+    $searcher = SearcherFactory::build('blog_id');
+    $html = $searcher->run('335')->render();
     echo $html;
 
 });

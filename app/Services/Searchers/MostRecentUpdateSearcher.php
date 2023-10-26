@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\URL;
 class MostRecentUpdateSearcher extends BlogSearcher
 {
     protected array $headers = [
-        'ID',
+        'Blog ID',
         'Post',
         'Page',
         'Title',
@@ -73,10 +73,10 @@ class MostRecentUpdateSearcher extends BlogSearcher
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top first-cell">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $page['blog_id'];
             $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $page['post_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
@@ -85,7 +85,7 @@ class MostRecentUpdateSearcher extends BlogSearcher
             $html .= '      <td class="align-top">';
             $html .= $this->highlight($page['title']);
             $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= '      <td class="align-top text-center">';
             $html .= Carbon::parse($page['date'])->format('F j, Y');
             $html .= '      </td>';
             $html .= '   </tr>';

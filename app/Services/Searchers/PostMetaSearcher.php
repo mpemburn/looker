@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\URL;
 class PostMetaSearcher extends BlogSearcher
 {
     protected array $headers = [
-        'Blog ID',
-        'Post ID',
-        'Post',
-        'Meta Key',
-        'Meta Value',
+        'Blog&nbsp;ID' => '5%',
+        'Post&nbsp;ID' => '5%',
+        'Post' => '30%',
+        'Meta Key' => '15%',
+        'Meta Value' => '15%',
     ];
     protected string $searchColumn = '';
 
@@ -73,7 +73,7 @@ class PostMetaSearcher extends BlogSearcher
             ->where('ID', $postId)
             ->first();
 
-        return $post->post_name;
+        return $post ? $post->post_name: '';
     }
 
     public function render(): string
@@ -83,14 +83,15 @@ class PostMetaSearcher extends BlogSearcher
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
+        $html .= $this->buildColumnGroup();
         $html .= $this->buildHeader();
         $this->found->each(function ($postMeta) use (&$html) {
             $url = $postMeta['blog_url'] . $postMeta['post_name'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top first-cell">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $postMeta['blog_id'];
             $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $postMeta['post_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
@@ -99,7 +100,7 @@ class PostMetaSearcher extends BlogSearcher
             $html .= '      <td class="align-top">';
             $html .= $postMeta['meta_key'];
             $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $this->highlight($postMeta['meta_value']);
             $html .= '      </td>';
             $html .= '   </tr>';

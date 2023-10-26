@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\URL;
 class ThemeSearcher extends BlogSearcher
 {
     protected array $headers = [
-        '10%' => 'Blog ID',
-        '40%' => 'Blog URL',
-        '50%' => 'Plugin(s)',
+        'Blog ID' => '10%',
+        'Blog URL' => '40%',
+        'Plugin(s)' => '50%',
     ];
 
     public function process(string $blogId, string $blogUrl): bool
@@ -54,7 +54,7 @@ class ThemeSearcher extends BlogSearcher
         $found->each(function ($item) use (&$html) {
             $url = $item['blog_url'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top first-cell">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $item['blog_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';

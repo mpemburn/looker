@@ -10,7 +10,7 @@ class OptionsSearcher extends BlogSearcher
 {
     protected array $already = [];
     protected array $headers = [
-        'Blog ID',
+        'Blog&nbsp;ID',
         'Blog URL',
         'Option',
         'Value'
@@ -57,7 +57,7 @@ class OptionsSearcher extends BlogSearcher
             }
             $url = $item['blog_url'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top first-cell">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $item['blog_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';

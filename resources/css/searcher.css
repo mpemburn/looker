@@ -1,6 +1,6 @@
-a.nav-item {
-    text-decoration: none;
-    margin-right: 1rem;
+a {
+    text-decoration: underline !important;
+    color: #0000cc !important;
 }
 
 button.btn {
@@ -11,6 +11,10 @@ button.btn {
 }
 button.btn:hover {
     background-color: #0000ee;
+}
+
+label {
+    font-weight: bold;
 }
 
 #date_range {
@@ -49,21 +53,20 @@ img.hidden {
     visibility: hidden;
 }
 
-td {
-    font-size: 11pt;
-}
-
 div.form-parts {
     float: left;
     margin-left: 3px;
 }
 
-#found {
-    clear: left;
+td {
+    font-size: 11pt;
+}
+td.align-top {
+    vertical-align: top!important;
 }
 
-.first-cell {
-    padding-left: 5px;
+#found {
+    clear: left;
 }
 
 .highlight {

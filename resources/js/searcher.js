@@ -29,8 +29,6 @@ $(document).ready(function ($) {
             let self = this;
             this.source.on('click', function () {
                 let baseUrl = document.location.href.replace(document.location.search, '');
-                // console.log($(this).val());
-                // console.log(document.location);
                 document.location = baseUrl + '?source=' + $(this).val();
             });
 
@@ -66,7 +64,7 @@ $(document).ready(function ($) {
                         console.log(data);
                     },
                     error: function (msg) {
-                        self.loading.addClass('d-none');
+                        self.loading.addClass('hidden');
                         console.log(msg);
                     }
                 });

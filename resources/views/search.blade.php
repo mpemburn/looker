@@ -28,6 +28,7 @@
                                         <option value="shortcodes">Shortcodes in Posts</option>
                                         <option value="plugins">Plugins</option>
                                         <option value="themes">Themes</option>
+                                        <option value="blog_id">Blog by ID</option>
                                         <option value="updated">Most recent update</option>
                                     </select>
                                 </label>

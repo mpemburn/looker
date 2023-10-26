@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\URL;
 class ShortCodeSearcher extends BlogSearcher
 {
     protected array $headers = [
+        'Blog&nbsp;ID',
+        'Post',
         'Page',
         'Title',
         'Content',
@@ -27,11 +29,13 @@ class ShortCodeSearcher extends BlogSearcher
             ->where('post_status', 'publish')
             ->orderBy('ID');
 
-        $posts->each(function (Post $post) use ($blogUrl, &$foundSomething) {
+        $posts->each(function (Post $post) use ($blogUrl, $blogId, &$foundSomething) {
             $found = $this->wasFound($post->post_content);
             if ($found) {
                 $foundSomething = true;
                 $this->found->push([
+                    'blog_id' => $blogId,
+                    'post_id' => $post->ID,
                     'blog_url' => $blogUrl,
                     'post_name' => $post->post_name,
                     'title' => $post->post_title,
@@ -55,6 +59,12 @@ class ShortCodeSearcher extends BlogSearcher
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
+            $html .= '      <td class="align-top text-center">';
+            $html .= $page['blog_id'];
+            $html .= '      </td>';
+            $html .= '      <td class="align-top text-center">';
+            $html .= $page['post_id'];
+            $html .= '      </td>';
             $html .= '      <td class="align-top first-cell">';
             $html .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
             $html .= '      </td>';

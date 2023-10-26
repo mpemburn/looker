@@ -4,10 +4,7 @@ namespace App\Services\Searchers;
 
 use App\Interfaces\SearcherInterface;
 use App\Models\Blog;
-use App\Models\Option;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 
 abstract class BlogSearcher implements SearcherInterface
 {
@@ -77,9 +74,13 @@ abstract class BlogSearcher implements SearcherInterface
 
     protected function buildHeader(): string
     {
+        $headers = array_is_list($this->headers)
+            ? $this->headers
+            : array_keys($this->headers);
+
         $class = ' class="first-cell"';
         $html = '   <tr style="background-color: #e2e8f0;">';
-        foreach (array_values($this->headers) as $header) {
+        foreach ($headers as $header) {
             $html .= '      <th' . $class . '>';
             $html .= $header;
             $html .= '      </th>';
@@ -97,7 +98,7 @@ abstract class BlogSearcher implements SearcherInterface
         }
 
         $html = '<colgroup>';
-        foreach (array_keys($this->headers) as $width) {
+        foreach (array_values($this->headers) as $width) {
             $html .= '<col span="1" style="width: ' . $width . ';">';
         }
         $html .= '<colgroup>';

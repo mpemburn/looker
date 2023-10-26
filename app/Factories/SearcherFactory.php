@@ -3,6 +3,7 @@
 namespace App\Factories;
 
 use App\Interfaces\SearcherInterface;
+use App\Services\Searchers\BlogByIdSearcher;
 use App\Services\Searchers\MostRecentUpdateSearcher;
 use App\Services\Searchers\OptionNameSearcher;
 use App\Services\Searchers\OptionsSearcher;
@@ -28,6 +29,7 @@ class SearcherFactory
             'plugins' => new PluginSearcher(),
             'themes' => new ThemeSearcher(),
             'updated' => new MostRecentUpdateSearcher(),
+            'blog_id' => new BlogByIdSearcher(),
             default => null
         };
     }

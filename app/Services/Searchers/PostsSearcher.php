@@ -2,8 +2,6 @@
 
 namespace App\Services\Searchers;
 
-use App\Facades\Database;
-use App\Models\Option;
 use App\Models\Post;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
@@ -63,10 +61,10 @@ class PostsSearcher extends BlogSearcher
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top first-cell">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $page['blog_id'];
             $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= '      <td class="align-top text-center">';
             $html .= $page['post_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
