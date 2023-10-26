@@ -22,14 +22,13 @@ class ShortCodeSearcher extends BlogSearcher
             return false;
         }
         $foundSomething = false;
-        $this->searchRegex ='/\[' . str_replace(['[', ']'], '', $this->searchText) . '/';
 
         $posts = (new Post())->setTable('wp_' . $blogId . '_posts')
             ->where('post_status', 'publish')
             ->orderBy('ID');
 
         $posts->each(function (Post $post) use ($blogUrl, &$foundSomething) {
-            $found = preg_match($this->searchRegex, $post->post_content, $matches);
+            $found = $this->wasFound($post->post_content);
             if ($found) {
                 $foundSomething = true;
                 $this->found->push([
@@ -51,13 +50,12 @@ class ShortCodeSearcher extends BlogSearcher
 
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
-        $html .= '<table>';
+        $html .= self::TABLE_TAG;
         $html .= $this->buildHeader();
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
-            $bgColor = ($this->foundCount % 2) === 1 ? '#e2e8f0' : '#fffff';
-            $html .= '   <tr style="background-color: ' . $bgColor . ';">';
-            $html .= '      <td class="align-top">';
+            $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
+            $html .= '      <td class="align-top first-cell">';
             $html .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
             $html .= '      </td>';
             $html .= '      <td class="align-top">';

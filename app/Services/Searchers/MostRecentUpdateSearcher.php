@@ -2,23 +2,22 @@
 
 namespace App\Services\Searchers;
 
-use App\Facades\Database;
-use App\Models\Option;
 use App\Models\Post;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 
-class PostsSearcher extends BlogSearcher
+class MostRecentUpdateSearcher extends BlogSearcher
 {
     protected array $headers = [
         'ID',
         'Post',
         'Page',
         'Title',
-        'Content',
         'Created',
     ];
+
+    protected ?Carbon $latestDate = null;
 
     public function process(string $blogId, string $blogUrl): bool
     {
@@ -28,28 +27,39 @@ class PostsSearcher extends BlogSearcher
 
         $foundSomething = false;
 
-        $posts = (new Post())->setTable('wp_' . $blogId . '_posts')
-            ->where('post_status', 'publish')
-            ->orderBy('ID');
+        $post = (new Post())->setTable('wp_' . $blogId . '_posts')
+            ->whereIn('post_status', ['publish', 'inherit'])
+            ->where(function ($post) {
+                return $post->where('post_date', $post->max('post_date'));
+            })->first();
 
-        $posts->each(function (Post $post) use ($blogUrl, $blogId, &$foundSomething) {
-            $foundTitle = $this->wasFound($post->post_title);
-            $foundContent = $this->wasFound($post->post_content);
-            if ($foundContent || $foundTitle) {
-                $foundSomething = true;
-                $this->found->push([
-                    'blog_id' => $blogId,
-                    'blog_url' => $blogUrl,
-                    'post_id' => $post->ID,
-                    'post_name' => $post->post_name,
-                    'title' => $post->post_title,
-                    'date' => $post->post_date,
-                    'content' => trim($post->post_content),
-                ]);
-            }
-        });
+        if ($post && $this->isLatestPost($post->post_date)) {
+            $this->found = collect();
+            $this->found->push([
+                'blog_id' => $blogId,
+                'blog_url' => $blogUrl,
+                'post_id' => $post->ID,
+                'post_name' => $post->post_name,
+                'title' => $post->post_title,
+                'date' => $post->post_date,
+            ]);
+            $foundSomething = true;
+        }
 
         return $foundSomething;
+    }
+
+    protected function isLatestPost(string $date): bool
+    {
+        $thisDate = Carbon::parse($date);
+
+        if (! $this->latestDate || $thisDate->isAfter($this->latestDate)) {
+            $this->latestDate = $thisDate;
+
+            return true;
+        }
+
+        return false;
     }
 
     public function render(): string
@@ -74,12 +84,6 @@ class PostsSearcher extends BlogSearcher
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= $this->highlight($page['title']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
-            $html .= $this->truncateContent(strip_tags($page['content']));
-            $html .= '      <div class="hidden">';
-            $html .= $this->highlight(strip_tags($page['content']));
-            $html .= '      <div>';
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= Carbon::parse($page['date'])->format('F j, Y');

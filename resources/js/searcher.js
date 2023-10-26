@@ -2,6 +2,9 @@ $(document).ready(function ($) {
     class Searcher {
         constructor() {
             this.source = $('input:radio[name="source"]');
+            this.type = $('#type');
+            this.search = $('#search');
+            this.searchSection = $('#search_section');
             this.found = $('#found');
             this.results = $('#results');
             this.loading = $('#loading');
@@ -30,6 +33,15 @@ $(document).ready(function ($) {
                 // console.log(document.location);
                 document.location = baseUrl + '?source=' + $(this).val();
             });
+
+            this.type.on('change', function (evt) {
+                let updatedSelected = ($(this).val() === 'updated')
+                let placeholder = updatedSelected ? 'placeholder' : '';
+                self.search.val(placeholder);
+                self.searchSection.toggle(!updatedSelected);
+                self.searchButton.prop('disabled', !updatedSelected);
+            });
+
             this.searchButton.on('click', function (evt) {
                 evt.preventDefault();
                 let formData = $('#search_form').serialize();
@@ -54,7 +66,7 @@ $(document).ready(function ($) {
                         console.log(data);
                     },
                     error: function (msg) {
-                        self.loading.addClass('hidden');
+                        self.loading.addClass('d-none');
                         console.log(msg);
                     }
                 });

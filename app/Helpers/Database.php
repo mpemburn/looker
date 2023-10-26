@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Services;
+namespace App\Helpers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
-class DatabaseService
+class Database
 {
-    public static function setDb(string $dbName, string $driver = 'mysql')
+    public function setDb(string $dbName, string $driver = 'mysql')
     {
-        DB::disconnect('mysql');
+        DB::disconnect($driver);
 
         $connection = config('database.connections.' . $driver);
         Config::set("database.connections." . $driver, [
@@ -22,7 +21,7 @@ class DatabaseService
         ]);
     }
 
-    public static function getDatabaseList(string $envKey = 'INSTALLED_DATABASES'): array
+    public function getDatabaseList(string $envKey = 'INSTALLED_DATABASES'): array
     {
         if (! env($envKey)) {
             return [];
@@ -38,8 +37,9 @@ class DatabaseService
         return $databases;
     }
 
-    public static function getInverseDatabaseList(): array
+    public function getInverseDatabaseList(): array
     {
         return array_flip(self::getDatabaseList());
     }
+
 }

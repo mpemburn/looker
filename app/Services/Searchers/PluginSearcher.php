@@ -6,14 +6,12 @@ use App\Models\Option;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 
-class OptionsSearcher extends BlogSearcher
+class PluginSearcher extends BlogSearcher
 {
-    protected array $already = [];
     protected array $headers = [
-        'Blog ID',
-        'Blog URL',
-        'Option',
-        'Value'
+        '10%' => 'Blog ID',
+        '40%' => 'Blog URL',
+        '50%' => 'Plugin(s)',
     ];
 
     public function process(string $blogId, string $blogUrl): bool
@@ -23,18 +21,22 @@ class OptionsSearcher extends BlogSearcher
         }
         $foundSomething = false;
 
-        $options = (new Option())->setTable('wp_' . $blogId . '_options')
-            ->orderBy('option_id');
+        $plugins = (new Option())->setTable('wp_' . $blogId . '_options')
+            ->where('option_name', 'active_plugins')
+            ->first();
 
-        $options->each(function (Option $option) use ($blogId, $blogUrl, &$foundSomething) {
-            $foundContent = $this->wasFound($option->option_value);
-            if ($foundContent) {
+        $plugins = unserialize($plugins->option_value);
+        $foundPlugins = collect();
+        collect($plugins)->each(function ($plugin) use ($blogId, $blogUrl, &$foundSomething, &$foundPlugins){
+            $directory = current(explode('/', $plugin));
+            $foundPlugin = $this->wasFound($directory);
+            if ($foundPlugin) {
                 $foundSomething = true;
+                $foundPlugins->push($directory);
                 $this->found->push([
                     'blog_id' => $blogId,
                     'blog_url' => $blogUrl,
-                    'option_name' => $option->option_name,
-                    'option_value' => $option->option_value,
+                    'plugin_name' => $foundPlugins,
                 ]);
             }
         });
@@ -50,11 +52,9 @@ class OptionsSearcher extends BlogSearcher
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
+        $html .= $this->buildColumnGroup();
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
-            if (in_array($item['blog_id'], $this->unique)) {
-                return;
-            }
             $url = $item['blog_url'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
             $html .= '      <td class="align-top first-cell">';
@@ -64,10 +64,7 @@ class OptionsSearcher extends BlogSearcher
             $html .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= $item['option_name'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
-            $html .= $this->truncateContent($item['option_value']);
+            $html .= $this->highlight($item['plugin_name']->implode(', '));
             $html .= '      </td>';
             $html .= '   </tr>';
 
@@ -82,6 +79,6 @@ class OptionsSearcher extends BlogSearcher
 
     protected function error(): void
     {
-        echo 'No text specified. Syntax: ' . URL::to('/in_post') . '?text=';
+        echo 'No text specified. Syntax: ' . URL::to('/in_plugin') . '?text=';
     }
 }

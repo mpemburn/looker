@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\URL;
 class PostMetaSearcher extends BlogSearcher
 {
     protected array $headers = [
+        'Blog ID',
         'Post ID',
-        'Page',
+        'Post',
         'Meta Key',
         'Meta Value',
     ];
-    protected ?string $metaKey = null;
+    protected string $searchColumn = '';
 
     public function process(string $blogId, string $blogUrl): bool
     {
@@ -25,28 +26,25 @@ class PostMetaSearcher extends BlogSearcher
 
         $foundSomething = false;
 
-        $postMetas = (new PostMeta())->setTable('wp_' . $blogId . '_postmeta')
-            ->orderBy('meta_id');
+        $test = $this->exact ? $this->searchText : '%' . $this->searchText . '%';
 
-        if ($this->metaKey) {
-            $postMetas->where('meta_key', $this->metaKey);
-        }
+        $postMetas = (new PostMeta())->setTable('wp_' . $blogId . '_postmeta')
+            ->where($this->searchColumn, 'LIKE', $test)
+            ->orderBy('meta_id');
 
         $postMetas->each(function (PostMeta $postMeta) use ($blogId, $blogUrl, &$foundSomething) {
             if ($this->isNotPublished($blogId, $postMeta->post_id)) {
                 return;
             }
-            $foundValue = preg_match($this->searchRegex, $postMeta->meta_value, $matches);
-            if ($foundValue) {
-                $foundSomething = true;
-                $this->found->push([
-                    'blog_url' => $blogUrl,
-                    'post_id' => $postMeta->post_id,
-                    'post_name' => $this->getPageName($blogId, $postMeta->post_id),
-                    'meta_key' => $postMeta->meta_key,
-                    'meta_value' => $postMeta->meta_value,
-                ]);
-            }
+
+            $this->found->push([
+                'blog_id' => $blogId,
+                'blog_url' => $blogUrl,
+                'post_id' => $postMeta->post_id,
+                'post_name' => $this->getPageName($blogId, $postMeta->post_id),
+                'meta_key' => $postMeta->meta_key,
+                'meta_value' => $postMeta->meta_value,
+            ]);
         });
 
         return $foundSomething;
@@ -84,12 +82,14 @@ class PostMetaSearcher extends BlogSearcher
 
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
-        $html .= '<table>';
+        $html .= self::TABLE_TAG;
         $html .= $this->buildHeader();
         $this->found->each(function ($postMeta) use (&$html) {
             $url = $postMeta['blog_url'] . $postMeta['post_name'];
-            $bgColor = ($this->foundCount % 2) === 1 ? '#e2e8f0' : '#fffff';
-            $html .= '   <tr style="background-color: ' . $bgColor . ';">';
+            $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
+            $html .= '      <td class="align-top first-cell">';
+            $html .= $postMeta['blog_id'];
+            $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= $postMeta['post_id'];
             $html .= '      </td>';
@@ -100,7 +100,7 @@ class PostMetaSearcher extends BlogSearcher
             $html .= $postMeta['meta_key'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= str_replace($this->searchText, '<strong>' . $this->searchText . '</strong>', $postMeta['meta_value']);
+            $html .= $this->highlight($postMeta['meta_value']);
             $html .= '      </td>';
             $html .= '   </tr>';
 

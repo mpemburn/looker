@@ -31,8 +31,8 @@ class PostsAcalogSearcher extends BlogSearcher
             ->orderBy('ID');
 
         $posts->each(function (Post $post) use ($blogUrl, $blogId, &$foundSomething) {
-            $foundContent = preg_match($this->searchRegex, $post->post_content, $matches);
-            $foundTitle = preg_match($this->searchRegex, $post->post_title, $matches);
+            $foundTitle = $this->wasFound($post->post_title);
+            $foundContent = $this->wasFound($post->post_content);
             if ($foundContent || $foundTitle) {
                 $foundSomething = true;
                 $this->found->push([
@@ -56,20 +56,19 @@ class PostsAcalogSearcher extends BlogSearcher
 
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
-        $html .= '<table>';
+        $html .= self::TABLE_TAG;
         $html .= $this->buildHeader();
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
-            $bgColor = ($this->foundCount % 2) === 1 ? '#e2e8f0' : '#fffff';
-            $html .= '   <tr style="background-color: ' . $bgColor . ';">';
-            $html .= '      <td class="align-top">';
+            $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
+            $html .= '      <td class="align-top first-cell">';
             $html .= $page['post_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= str_replace($this->searchText, '<strong>' . $this->searchText . '</strong>', $page['title']);
+            $html .= $this->highlight($page['title']);
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= $this->truncateContent(strip_tags($page['content']));
