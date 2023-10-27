@@ -1,6 +1,7 @@
 $(document).ready(function ($) {
     class Searcher {
         constructor() {
+            this.dashLinks = $('li[data-value]');
             this.source = $('input:radio[name="source"]');
             this.type = $('#type');
             this.search = $('#search');
@@ -14,6 +15,14 @@ $(document).ready(function ($) {
 
             this.setRadio();
             this.addListeners();
+            this.gotoType();
+         }
+
+        gotoType() {
+            let urlParams = new URLSearchParams(window.location.search);
+            let type = urlParams.get('type');
+
+            this.type.val(type).trigger('change');
         }
 
         setRadio() {
@@ -27,6 +36,12 @@ $(document).ready(function ($) {
 
         addListeners() {
             let self = this;
+
+            this.dashLinks.on('click', function () {
+                let value = $(this).data('value');
+                document.location = './search?type=' + value;
+            });
+
             this.source.on('click', function () {
                 let baseUrl = document.location.href.replace(document.location.search, '');
                 document.location = baseUrl + '?source=' + $(this).val();

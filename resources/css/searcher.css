@@ -17,6 +17,13 @@ label {
     font-weight: bold;
 }
 
+li {
+    list-style: revert;
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0000cc;
+}
+
 #date_range {
     display: none;
 }
