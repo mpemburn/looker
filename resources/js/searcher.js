@@ -1,6 +1,7 @@
 $(document).ready(function ($) {
     class Searcher {
         constructor() {
+            this.urlParams = new URLSearchParams(window.location.search);
             this.dashLinks = $('li[data-value]');
             this.source = $('input:radio[name="source"]');
             this.type = $('#type');
@@ -19,17 +20,16 @@ $(document).ready(function ($) {
          }
 
         gotoType() {
-            let urlParams = new URLSearchParams(window.location.search);
-            let type = urlParams.get('type');
-
-            this.type.val(type).trigger('change');
+            let type = this.urlParams.get('type');
+            if (type) {
+                this.type.val(type).trigger('change');
+            }
         }
 
         setRadio() {
             let self = this;
             if (this.source.is('*')) {
-                let urlParams = new URLSearchParams(document.location.search);
-                let source = urlParams.get('source');
+                let source = this.urlParams.get('source');
                 self.source.filter('[value="' + source + '"]').prop('checked', true);
             }
         }
@@ -48,11 +48,14 @@ $(document).ready(function ($) {
             });
 
             this.type.on('change', function (evt) {
-                let updatedSelected = ($(this).val() === 'updated')
-                let placeholder = updatedSelected ? 'placeholder' : '';
+                let hideSearchInput = ($.inArray($(this).val(), ['list_all', 'updated'])  !== -1);
+                let placeholder = hideSearchInput ? 'placeholder' : '';
+                self.found.html('');
+                self.results.html('');
                 self.search.val(placeholder);
-                self.searchSection.toggle(!updatedSelected);
-                self.searchButton.prop('disabled', !updatedSelected);
+                self.searchSection.toggle(!hideSearchInput);
+                self.searchButton.prop('disabled', !hideSearchInput);
+                self.search.focus();
             });
 
             this.searchButton.on('click', function (evt) {

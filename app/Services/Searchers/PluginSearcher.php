@@ -52,7 +52,6 @@ class PluginSearcher extends BlogSearcher
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
-        $html .= $this->buildColumnGroup();
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
             $url = $item['blog_url'];

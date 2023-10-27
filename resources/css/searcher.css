@@ -2,6 +2,10 @@ a {
     text-decoration: underline !important;
     color: #0000cc !important;
 }
+a.inline-flex {
+    text-decoration: none !important;
+    font-size: 14pt;
+}
 
 button.btn {
     position: relative;
@@ -22,6 +26,10 @@ li {
     cursor: pointer;
     text-decoration: underline;
     color: #0000cc;
+}
+
+#sources {
+    margin-bottom: 0.5rem;
 }
 
 #date_range {

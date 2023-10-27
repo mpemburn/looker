@@ -20,6 +20,7 @@
                         <li data-value="plugins">Plugins</li>
                         <li data-value="themes">Themes</li>
                         <li data-value="blog_id">Blog by ID</li>
+                        <li data-value="list_all">List all blogs</li>
                         <li data-value="updated">Most recent update</li>
                     </ul>
                 </div>

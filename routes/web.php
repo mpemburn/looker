@@ -23,8 +23,8 @@ Route::get('/', function () {
 
 Route::get('/dev', function () {
     Database::setDb('www_clarku');
-    $searcher = SearcherFactory::build('blog_id');
-    $html = $searcher->run('335')->render();
+    $searcher = SearcherFactory::build('list_all');
+    $html = $searcher->run('foo')->render();
     echo $html;
 
 });

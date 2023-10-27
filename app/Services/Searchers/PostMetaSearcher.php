@@ -83,7 +83,6 @@ class PostMetaSearcher extends BlogSearcher
         $this->foundCount = 0;
         $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
-        $html .= $this->buildColumnGroup();
         $html .= $this->buildHeader();
         $this->found->each(function ($postMeta) use (&$html) {
             $url = $postMeta['blog_url'] . $postMeta['post_name'];

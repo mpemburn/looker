@@ -74,17 +74,16 @@ abstract class BlogSearcher implements SearcherInterface
 
     protected function buildHeader(): string
     {
+        $html = $this->buildColumnGroup();
         $headers = array_is_list($this->headers)
             ? $this->headers
             : array_keys($this->headers);
 
-        $class = ' class="first-cell"';
-        $html = '   <tr style="background-color: #e2e8f0;">';
+        $html .= '   <tr style="background-color: #e2e8f0;">';
         foreach ($headers as $header) {
-            $html .= '      <th' . $class . '>';
+            $html .= '      <th>';
             $html .= $header;
             $html .= '      </th>';
-            $class = '';
         }
         $html .= '   </tr>';
 

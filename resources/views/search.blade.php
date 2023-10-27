@@ -11,7 +11,7 @@
                 <div class="p-2">
                     <form id="search_form">
                         @if (env('INSTALLED_TEST_DATABASES'))
-                            <div>
+                            <div id="sources">
                                 <input type="radio" name="source" value="prod" checked> Production
                                 <input type="radio" name="source" value="test"> Test
                             </div>
@@ -29,6 +29,7 @@
                                         <option value="plugins">Plugins</option>
                                         <option value="themes">Themes</option>
                                         <option value="blog_id">Blog by ID</option>
+                                        <option value="list_all">List all blogs</option>
                                         <option value="updated">Most recent update</option>
                                     </select>
                                 </label>
