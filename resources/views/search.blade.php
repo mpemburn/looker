@@ -45,6 +45,10 @@
                                 <input id="search" type="search" name="text" placeholder="Enter search term"><br>
                                 <input type="checkbox" name="exact"> Exact word match
                             </div>
+                            <div id="dropdown_section" class="form-parts">
+                                <strong><span id="dropdown_title"></span></strong>
+                                <select id="dropdown"></select>
+                            </div>
                             <div class="form-parts">
                                 <button id="search_btn" class="btn bg-blue-600 text-white hover:bg-blue-600 py-3 px-6 leading-tight" disabled>Search</button>
                                 <img id="loading" class="hidden"

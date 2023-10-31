@@ -24,6 +24,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dev', function () {
+    $themes = (new \App\Services\BlogService())->getThemeList('news_clarku');
+    !d($themes);
     // Do what thou wilt
 });
 
@@ -38,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
 });
 
+Route::get('/get_list', [SearchController::class, 'getList'])->name('get_list');
 Route::post('/do_search', [SearchController::class, 'search'])->name('do_search');
 
 require __DIR__.'/auth.php';

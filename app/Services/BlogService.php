@@ -21,7 +21,7 @@ class BlogService
     }
 
 
-    public function getActiveBlogs(array $filter = [], ?string $startDate = null, ?string $endDate = null): Collection
+    public function getActiveBlogs(array $filter = []): Collection
     {
         $rows = collect();
         $blogs = Blog::where('archived', 0)
@@ -58,6 +58,43 @@ class BlogService
         return $rows;
     }
 
+    public function getPluginList(string $database): array
+    {
+        $plugins = collect();
+
+        Database::setDb($database);
+        $this->getActiveBlogs()->each(function ($blog) use (&$plugins) {
+            $activePlugins = (new Option())->setTable('wp_' . $blog['blog_id'] . '_options')
+                ->where('option_name', 'active_plugins')
+                ->first();
+            collect(unserialize($activePlugins->option_value))->each(function ($plugin) use (&$plugins) {
+                $parts = explode('/', $plugin);
+                $plugins->push(current($parts));
+            });
+        });
+
+        return array_values($plugins->unique()->sort()->toArray());
+    }
+
+    public function getThemeList(string $database): array
+    {
+        $themes = collect();
+
+        Database::setDb($database);
+        $rootTheme = (new Option())->setTable('wp_options')
+            ->where('option_name', 'stylesheet')
+            ->first();
+        $themes->push($rootTheme->option_value);
+
+        $this->getActiveBlogs()->each(function ($blog) use (&$themes) {
+            $theme = (new Option())->setTable('wp_' . $blog['blog_id'] . '_options')
+                ->where('option_name', 'stylesheet')
+                ->first();
+            $themes->push($theme->option_value);
+        });
+
+        return array_values($themes->unique()->sort()->toArray());
+    }
 
     protected function getBlogData(Blog $blog, array $filter): ?array
     {

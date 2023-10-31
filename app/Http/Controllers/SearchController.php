@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Factories\SearcherFactory;
+use App\Services\BlogService;
 use Illuminate\Http\Request;
 use App\Facades\Database;
 use Illuminate\Support\Facades\Log;
@@ -43,5 +44,33 @@ class SearchController extends Controller
         }
 
         return response()->json(['error' => 'Nothing']);
+    }
+
+    public function getList(Request $request)
+    {
+        $database = request('database');
+        $type = request('type');
+
+        if (! $database) {
+            return response()->json(['error' => 'No Database']);;
+        }
+
+        if ($type === 'plugins') {
+            return response()->json(['type' => $type, 'plugins' => $this->getPluginList($database)]);
+        }
+
+        if ($type === 'themes') {
+            return response()->json(['type' => $type, 'themes' => $this->getThemeList($database)]);
+        }
+    }
+
+    protected function getPluginList(string $database): array
+    {
+        return (new BlogService())->getPluginList($database);
+    }
+
+    protected function getThemeList(string $database): array
+    {
+        return (new BlogService())->getThemeList($database);
     }
 }

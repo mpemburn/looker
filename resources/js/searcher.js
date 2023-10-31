@@ -6,13 +6,18 @@ $(document).ready(function ($) {
             this.source = $('input:radio[name="source"]');
             this.type = $('#type');
             this.search = $('#search');
+            this.dropdown = $('#dropdown');
             this.searchSection = $('#search_section');
+            this.dropdownSection = $('#dropdown_section');
             this.found = $('#found');
             this.results = $('#results');
             this.loading = $('#loading');
             this.searchButton = $('#search_btn');
             this.search = $('[name="text"]');
+            this.database = $('[name="database"]');
             this.search.focus();
+
+            this.dropdownSection.hide();
 
             this.setRadio();
             this.addListeners();
@@ -24,6 +29,33 @@ $(document).ready(function ($) {
             if (type) {
                 this.type.val(type).trigger('change');
             }
+        }
+
+        populateDropdown(type) {
+            let self = this;
+
+            this.loading.removeClass('hidden');
+            this.dropdown.empty();
+
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: '/get_list?type=' + type + '&database=' + this.database.val(),
+                success: function (data) {
+                    let result = data[data.type];
+                    let label = data.type.charAt(0).toUpperCase() + data.type.slice(1);
+                    self.dropdown.append($("<option />").text('Select from ' + label));
+                    $.each(result, function(key, item) {
+                        self.dropdown.append($("<option />").val(item).text(item));
+                    });
+
+                    self.loading.addClass('hidden');
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+
         }
 
         setRadio() {
@@ -48,14 +80,32 @@ $(document).ready(function ($) {
             });
 
             this.type.on('change', function (evt) {
-                let hideSearchInput = ($.inArray($(this).val(), ['list_all', 'updated'])  !== -1);
+                let type = $(this).val();
+                let hideSearchInput = ($.inArray(type, ['list_all', 'plugins', 'themes', 'updated'])  !== -1);
+                let showDropdown = ($.inArray(type, ['themes', 'plugins'])  !== -1);
                 let placeholder = hideSearchInput ? 'placeholder' : '';
                 self.found.html('');
                 self.results.html('');
                 self.search.val(placeholder);
                 self.searchSection.toggle(!hideSearchInput);
+                self.dropdownSection.toggle(showDropdown);
                 self.searchButton.prop('disabled', !hideSearchInput);
                 self.search.focus();
+                if (showDropdown) {
+                    self.populateDropdown(type);
+                }
+            });
+
+            this.database.on('change', function (evt) {
+                let type = self.type.val();
+                let showDropdown = ($.inArray(type, ['themes', 'plugins'])  !== -1);
+                if (showDropdown) {
+                    self.populateDropdown(type);
+                }
+            });
+
+            this.dropdown.on('change', function (evt) {
+                self.search.val($(this).val());
             });
 
             this.searchButton.on('click', function (evt) {
