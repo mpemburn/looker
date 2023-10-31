@@ -1,9 +1,11 @@
 <?php
 
 use App\Factories\SearcherFactory;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Facades\Database;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,16 +24,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dev', function () {
-    Database::setDb('www_clarku');
-    $searcher = SearcherFactory::build('list_all');
-    $html = $searcher->run('foo')->render();
-    echo $html;
-
+    // Do what thou wilt
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

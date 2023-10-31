@@ -61,7 +61,8 @@ abstract class BlogSearcher implements SearcherInterface
     {
         if ($this->exact) {
             // Only return exact word matches
-            return preg_match('/\b' . $this->searchText . '\b/i', $testText);
+//            return preg_match('/\b' . $this->searchText . '\b/i', $testText);
+            return $this->searchText === $testText;
         }
 
         return preg_match($this->searchRegex, $testText, $matches);

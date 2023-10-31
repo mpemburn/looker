@@ -63,6 +63,15 @@ return [
             ]) : [],
         ],
 
+        'server_mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_REMOTE_HOST', '127.0.0.1'),
+            'port' => env('DB_REMOTE_PORT', '3306'),
+            'database' => env('DB_REMOTE_DATABASE', 'forge'),
+            'username' => env('DB_REMOTE_USERNAME', 'forge'),
+            'password' => env('DB_REMOTE_PASSWORD', ''),
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

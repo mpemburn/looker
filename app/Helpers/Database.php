@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Database
 {
@@ -31,7 +32,20 @@ class Database
         collect(explode(',', env($envKey)))
             ->each(function ($db) use (&$databases) {
                 $parts = explode(':', $db);
-                $databases[$parts[0]] = $parts[1];
+                $site = $parts[0];
+                $dbName = $parts[1];
+                try {
+                    // Make sure database exists before adding to list
+                    self::setDb($dbName);
+                    $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
+                    $db = DB::select($query, [$dbName]);
+                    if ($db) {
+                        $databases[$site] = $dbName;
+                    }
+                    self::setDb(env('DB_DATABASE'));
+                } catch (\Exception $e) {
+                    return null;
+                }
             });
 
         return $databases;
