@@ -16,6 +16,7 @@
                         <li data-value="postmeta_keys">Postmeta Keys</li>
                         <li data-value="options">Option Values</li>
                         <li data-value="option_name">Option Names</li>
+                        <li data-value="users">Users</li>
                         <li data-value="shortcodes">Shortcodes in Posts</li>
                         <li data-value="plugins">Plugins</li>
                         <li data-value="themes">Themes</li>

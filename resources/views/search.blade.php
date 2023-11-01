@@ -25,6 +25,7 @@
                                         <option value="postmeta_keys">Postmeta Keys</option>
                                         <option value="options">Option Values</option>
                                         <option value="option_name">Option Names</option>
+                                        <option value="users">Users</option>
                                         <option value="shortcodes">Shortcodes in Posts</option>
                                         <option value="plugins">Plugins</option>
                                         <option value="themes">Themes</option>

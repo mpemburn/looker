@@ -5,6 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Facades\Database;
+use App\Models\WpUser;
+use App\Services\Searchers\UsersSearcher;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -23,9 +25,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/db', function () {
+    $blogs = \DB::connection('server_mysql')->table('wp_blogs')->get();
+
+    !d($blogs);
+});
+
 Route::get('/dev', function () {
-    $themes = (new \App\Services\BlogService())->getThemeList('news_clarku');
-    !d($themes);
+    Database::setDb('www_clarku');
+    $users = (new UsersSearcher())->run('cdonofrio')->render();
+
+    echo $users;
     // Do what thou wilt
 });
 
