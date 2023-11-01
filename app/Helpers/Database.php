@@ -21,6 +21,32 @@ class Database
             'database' => $dbName,
         ]);
     }
+    public function setRemoteDb(string $dbName, string $driver = 'server_mysql')
+    {
+        DB::disconnect($driver);
+        $credentials = $this->unpackCredentials(env(strtoupper($dbName)));
+
+        $connection = config('database.connections.' . $driver);
+        Config::set("database.connections." . $driver, [
+            'driver' => 'mysql',
+            'host' => $connection['host'],
+            'username' => $credentials['username'],
+            'password' => $credentials['password'],
+            'database' => $credentials['database'],
+        ]);
+    }
+
+    protected function unpackCredentials(string $packed): array
+    {
+        $credentials = [];
+
+        collect(explode(',', $packed))->each(function ($var) use (&$credentials) {
+            $parts = explode(':', $var);
+            $credentials[$parts[0]] = $parts[1];
+        });
+
+        return $credentials;
+    }
 
     public function getDatabaseList(string $envKey = 'INSTALLED_DATABASES'): array
     {

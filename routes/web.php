@@ -26,6 +26,8 @@ Route::get('/', function () {
 });
 
 Route::get('/db', function () {
+    Database::setRemoteDb('www_clarku');
+
     $blogs = \DB::connection('server_mysql')->table('wp_blogs')->get();
 
     !d($blogs);
