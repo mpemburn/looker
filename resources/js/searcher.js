@@ -45,8 +45,9 @@ $(document).ready(function ($) {
                     let result = data[data.type];
                     let label = data.type.charAt(0).toUpperCase() + data.type.slice(1);
                     self.dropdown.append($("<option />").text('Select from ' + label));
-                    $.each(result, function(key, item) {
-                        self.dropdown.append($("<option />").val(item).text(item));
+                    $.each(result, function(key, text) {
+                        let value = typeof key === 'number' ? text : key;
+                        self.dropdown.append($("<option />").val(value).text(text));
                     });
 
                     self.loading.addClass('hidden');
@@ -81,8 +82,8 @@ $(document).ready(function ($) {
 
             this.type.on('change', function (evt) {
                 let type = $(this).val();
-                let hideSearchInput = ($.inArray(type, ['list_all', 'plugins', 'themes', 'updated'])  !== -1);
-                let showDropdown = ($.inArray(type, ['themes', 'plugins'])  !== -1);
+                let hideSearchInput = ($.inArray(type, ['list_all', 'plugins', 'themes', 'roles', 'updated'])  !== -1);
+                let showDropdown = ($.inArray(type, ['themes', 'plugins', 'roles'])  !== -1);
                 let placeholder = hideSearchInput ? 'placeholder' : '';
                 self.found.html('');
                 self.results.html('');

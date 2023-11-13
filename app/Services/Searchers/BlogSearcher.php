@@ -128,6 +128,11 @@ abstract class BlogSearcher implements SearcherInterface
         return preg_replace('/('. preg_quote($this->searchText) . ')/i', $replace, $foundString);
     }
 
+    protected function makeLink(string $url): string
+    {
+        return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+    }
+
     protected function setRowColor(int $count): string
     {
         return ($count % 2) === 1 ? '#e2e8f0' : '#fffff';

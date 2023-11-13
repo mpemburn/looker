@@ -33,6 +33,8 @@ return [
     |
     */
 
+    'is_remote' => env('DB_IS_REMOTE', false),
+
     'connections' => [
 
         'sqlite' => [
@@ -63,7 +65,7 @@ return [
             ]) : [],
         ],
 
-        'server_mysql' => [
+        'remote_mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_REMOTE_HOST', '127.0.0.1'),
             'port' => env('DB_REMOTE_PORT', '3306'),

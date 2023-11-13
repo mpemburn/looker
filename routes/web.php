@@ -5,9 +5,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Facades\Database;
+use App\Models\WpOption;
 use App\Models\WpUser;
 use App\Services\Searchers\UsersSearcher;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,14 +28,25 @@ Route::get('/', function () {
 });
 
 Route::get('/db', function () {
-    Database::setRemoteDb('www_clarku');
+    collect(
+        ['www_clarku','news_clarku','sites_clarku','wordpress_clarku']
+    )->each(function ($database) {
+        Database::setDb($database);
 
-    $blogs = \DB::connection('server_mysql')->table('wp_blogs')->get();
+        $blogs = \DB::connection()->table('wp_blogs')->get();
 
-    !d($blogs);
+        !d($blogs->count());
+    });
 });
 
 Route::get('/dev', function () {
+    // Do what thou wilt
+});
+
+Route::get('/remote', function () {
+    app('config')->write('database.is_remote', false);
+    echo config('database.is_remote');
+    die();
     Database::setDb('www_clarku');
     $users = (new UsersSearcher())->run('cdonofrio')->render();
 

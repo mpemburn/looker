@@ -60,7 +60,7 @@ class PluginSearcher extends BlogSearcher
             $html .= $item['blog_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
+            $html .= $this->makeLink($url);
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= $this->highlight($item['plugin_name']->implode(', '));

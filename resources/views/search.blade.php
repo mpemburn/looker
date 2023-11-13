@@ -12,8 +12,8 @@
                     <form id="search_form">
                         @if (env('INSTALLED_TEST_DATABASES'))
                             <div id="sources">
-                                <input type="radio" name="source" value="prod" checked> Production
-                                <input type="radio" name="source" value="test"> Test
+                                <input type="radio" name="source" value="remote" checked> Remote
+                                <input type="radio" name="source" value="local"> Local
                             </div>
                             <hr>
                         @endif
@@ -26,6 +26,7 @@
                                         <option value="options">Option Values</option>
                                         <option value="option_name">Option Names</option>
                                         <option value="users">Users</option>
+                                        <option value="roles">User Roles</option>
                                         <option value="shortcodes">Shortcodes in Posts</option>
                                         <option value="plugins">Plugins</option>
                                         <option value="themes">Themes</option>

@@ -80,7 +80,7 @@ class MostRecentUpdateSearcher extends BlogSearcher
             $html .= $page['post_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
+            $html .= $this->makeLink($url);
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= $this->highlight($page['title']);

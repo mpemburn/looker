@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Blog;
 use App\Models\Option;
 use App\Models\Post;
+use App\Models\WpOption;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use App\Facades\Database;
@@ -74,6 +75,20 @@ class BlogService
         });
 
         return array_values($plugins->unique()->sort()->toArray());
+    }
+
+    public function getRolesList(string $database): array {
+        Database::setDb($database);
+
+        $rawRoles = WpOption::where('option_name', 'wp_user_roles')->first();
+
+        $roles = unserialize($rawRoles->option_value);
+
+        $dropdown = collect($roles)->map(function ($role, $key) {
+            return $role['name'];
+        });
+
+        return $dropdown->toArray();
     }
 
     public function getThemeList(string $database): array
