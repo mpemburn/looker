@@ -2,15 +2,16 @@
 
 namespace App\Services\Searchers;
 
+use App\Models\Option;
 use App\Models\WpBlogs;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class ListAllBlogsSearcher extends BlogSearcher
 {
     protected array $headers = [
         'Blog&nbsp;ID',
-        'Site&nbsp;ID',
-        'Domain',
+        'Admin&nbsp;Email',
         'Path',
         'Created',
         'Updated',
@@ -26,10 +27,18 @@ class ListAllBlogsSearcher extends BlogSearcher
         $blogs = WpBlogs::all();
 
         $blogs->each(function ($blog) {
+            $admin_email = 'n/a';
+            if (Schema::hasTable('wp_' . $blog['blog_id'] . '_options')) {
+                $admin = (new Option())->setTable('wp_' . $blog['blog_id'] . '_options')
+                    ->where('option_name', 'admin_email')
+                    ->first()
+                    ->toArray();
+                $admin_email = $admin['option_value'];
+            }
+
             $this->found->push([
                 'blog_id' => $blog['blog_id'],
-                'site_id' => $blog['site_id'],
-                'domain' => $blog['domain'],
+                'admin_email' => $admin_email,
                 'path' => $blog['path'],
                 'registered' => $blog['registered'],
                 'last_updated' => $blog['last_updated'],
@@ -61,11 +70,8 @@ class ListAllBlogsSearcher extends BlogSearcher
             $html .= '      <td class="align-top first-cell text-center">';
             $html .= $blog['blog_id'];
             $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
-            $html .= $blog['site_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
-            $html .= $blog['domain'];
+            $html .= '      <td class="align-top text-left">';
+            $html .= $blog['admin_email'];
             $html .= '      </td>';
             $html .= '      <td class="align-top text-left">';
             $html .= $blog['path'];

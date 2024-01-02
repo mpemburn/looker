@@ -14,6 +14,7 @@
                         <li data-value="posts">Posts</li>
                         <li data-value="postmeta_values">Postmeta Values</li>
                         <li data-value="postmeta_keys">Postmeta Keys</li>
+                        <li data-value="comments">Comments</li>
                         <li data-value="options">Option Values</li>
                         <li data-value="option_name">Option Names</li>
                         <li data-value="users">Users</li>

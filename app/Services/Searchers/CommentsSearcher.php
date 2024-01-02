@@ -2,47 +2,44 @@
 
 namespace App\Services\Searchers;
 
-use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 
-class PostsSearcher extends BlogSearcher
+class CommentsSearcher extends BlogSearcher
 {
     protected array $headers = [
-        'ID',
-        'Post',
-        'Page',
-        'Title',
-        'Content',
-        'Created',
+        'Blog&nbsp;ID',
+        'URL',
+        'Post&nbsp;ID',
+        'Comment',
+        'Author',
+        'Date',
     ];
 
     public function process(string $blogId, string $blogUrl): bool
     {
-        if (! Schema::hasTable('wp_' . $blogId. '_posts')) {
+        if (! Schema::hasTable('wp_' . $blogId. '_comments')) {
             return false;
         }
 
         $foundSomething = false;
 
-        $posts = (new Post())->setTable('wp_' . $blogId . '_posts')
-            ->where('post_status', 'publish')
-            ->orderBy('ID');
+        $comments = (new Comment())->setTable('wp_' . $blogId . '_comments')
+            ->orderBy('comment_ID');
 
-        $posts->each(function (Post $post) use ($blogUrl, $blogId, &$foundSomething) {
-            $foundTitle = $this->wasFound($post->post_title);
-            $foundContent = $this->wasFound($post->post_content);
-            if ($foundContent || $foundTitle) {
+        $comments->each(function (Comment $comment) use ($blogUrl, $blogId, &$foundSomething) {
+            $found = $this->wasFound($comment->comment_content);
+            if ($found) {
                 $foundSomething = true;
                 $this->found->push([
                     'blog_id' => $blogId,
                     'blog_url' => $blogUrl,
-                    'post_id' => $post->ID,
-                    'post_name' => $post->post_name,
-                    'title' => $post->post_title,
-                    'date' => $post->post_date,
-                    'content' => trim($post->post_content),
+                    'post_id' => $comment->comment_post_ID,
+                    'author_email' => $comment->comment_author_email,
+                    'date' => $comment->comment_date,
+                    'content' => trim($comment->comment_content),
                 ]);
             }
         });
@@ -58,29 +55,30 @@ class PostsSearcher extends BlogSearcher
         $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
         $html .= $this->buildHeader();
-        $this->found->each(function ($page) use (&$html) {
-            $url = $page['blog_url'] . $page['post_name'];
+        $this->found->each(function ($comment) use (&$html) {
+            $url = $comment['blog_url'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
             $html .= '      <td class="align-top text-center">';
-            $html .= $page['blog_id'];
+            $html .= $comment['blog_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top text-center">';
-            $html .= $page['post_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
             $html .= $this->makeLink($url);
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= $this->highlight($page['title']);
+            $html .= $comment['post_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= $this->truncateContent(strip_tags($page['content']));
+            $html .= $this->truncateContent(strip_tags($comment['content']));
+            $html .= '      </td>';
             $html .= '      <div class="hidden">';
-            $html .= $this->highlight(strip_tags($page['content']));
+            $html .= $this->highlight(strip_tags($comment['content']));
             $html .= '      </div>';
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
-            $html .= Carbon::parse($page['date'])->format('F j, Y');
+            $html .= $comment['author_email'];
+            $html .= '      </td>';
+            $html .= '      <td class="align-top">';
+            $html .= Carbon::parse($comment['date'])->format('F j, Y');
             $html .= '      </td>';
             $html .= '   </tr>';
 

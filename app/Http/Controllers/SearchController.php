@@ -60,6 +60,10 @@ class SearchController extends Controller
             return response()->json(['type' => $type, 'plugins' => $this->getPluginList($database)]);
         }
 
+        if ($type === 'post_type') {
+            return response()->json(['type' => $type, 'post_type' => $this->getPostTypeList($database)]);
+        }
+
         if ($type === 'roles') {
             return response()->json(['type' => $type, 'roles' => $this->getRolesList($database)]);
         }
@@ -72,6 +76,11 @@ class SearchController extends Controller
     protected function getPluginList(string $database): array
     {
         return (new BlogService())->getPluginList($database);
+    }
+
+    protected function getPostTypeList(string $database): array
+    {
+        return (new BlogService())->getPostTypeList($database);
     }
 
     protected function getRolesList(string $database): array

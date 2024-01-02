@@ -8,24 +8,28 @@ use App\Models\WpSitemeta;
 use App\Models\WpUser;
 use App\Models\WpUsermeta;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UsersRolesSearcher extends BlogSearcher
 {
     protected array $already = [];
     protected array $headers = [
-        'Blog&nbsp;ID' => '5%',
-        'URL' => '25%',
-        'User&nbsp;Email' => '25%',
-        'Updated' => '25%',
+        'Blog&nbsp;ID' => '25%',
+//        'URL' => '25%',
+//        'User ID' => '5%',
+//        'User&nbsp;Email' => '25%',
+//        'Updated' => '25%',
     ];
 
     public function run(?string $searchText, bool $exact = false, bool $verbose = false): BlogSearcher
     {
+        Log::debug('%"' . $searchText . '"%');
         $userRoles = WpUsermeta::where('meta_key', 'LIKE', 'wp_%_capabilities')
-            ->where('meta_value', 'LIKE', '%"' . $searchText . '%')
+            ->where('meta_value', 'LIKE', '%"' . $searchText . '"%')
             ->get();
 
-        $userRoles->each(function ($roles) {
+        $ids = collect();
+        $userRoles->each(function ($roles) use (&$ids) {
             $user = WpUser::where('ID', $roles->user_id)->first();
             $blog_id = preg_replace('/[^0-9]+/', '', $roles->meta_key);
             $blog = Blog::where('blog_id', $blog_id)
@@ -36,12 +40,20 @@ class UsersRolesSearcher extends BlogSearcher
             if (! $blog) {
                 return;
             }
+
+            if ($ids->contains($user->ID)) {
+                return;
+            }
+
             $this->found->push([
                 'blog_id' => $blog_id,
                 'url' => 'https://' . $blog->domain . $blog->path,
+                'path' => $blog->path,
+                'user_id' => $user->ID,
                 'user_email' => $user->user_email,
                 'updated' => $blog->last_updated,
             ]);
+            $ids->push($user->ID);
         });
 
         return $this;
@@ -52,7 +64,7 @@ class UsersRolesSearcher extends BlogSearcher
         return true;
     }
 
-    public function render(bool $showNotFound = false): string
+    public function renderX(bool $showNotFound = false): string
     {
         $html = '';
 
@@ -63,7 +75,39 @@ class UsersRolesSearcher extends BlogSearcher
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
             if (in_array($item['blog_id'], $this->unique)) {
+                //return;
+            }
+            $html .= '   <tr>';
+            $html .= '      <td class="align-top text-left">';
+            $html .= 'users["' . $item['path'] . '"]="' . $item['user_id'] . '"';
+            $html .= '      </td>';
+            $html .= '   </tr>';
+
+            $this->foundCount++;
+            $this->unique[] = $item['blog_id'];
+        })->sortBy('blog_id');
+        $html .= '<table>';
+        $html .= '<div>';
+
+        return $html;
+    }
+
+    public function render(bool $showNotFound = false): string
+    {
+        $html = '';
+        $ids = collect();
+
+        $found = $showNotFound ? $this->notFound : $this->found;
+        $this->foundCount = 0;
+        $html .= '<div style="font-family: sans-serif">';
+        $html .= self::TABLE_TAG;
+        $html .= $this->buildHeader();
+        $found->each(function ($item) use (&$html, &$ids) {
+            if (in_array($item['blog_id'], $this->unique)) {
                 return;
+            }
+            if (! $ids->contains($item['user_id'])) {
+                $ids->push($item['user_id']);
             }
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
             $html .= '      <td class="align-top text-center">';
@@ -71,6 +115,9 @@ class UsersRolesSearcher extends BlogSearcher
             $html .= '      </td>';
             $html .= '      <td class="align-top text-left">';
             $html .= $this->makeLink($item['url']);
+            $html .= '      </td>';
+            $html .= '      <td class="align-top text-center">';
+            $html .= $item['user_id'];
             $html .= '      </td>';
             $html .= '      <td class="align-top text-left">';
             $html .= $item['user_email'];
@@ -86,6 +133,7 @@ class UsersRolesSearcher extends BlogSearcher
         $html .= '<table>';
         $html .= '<div>';
 
+        $idArray = $ids->implode(',');
         return $html;
     }
 

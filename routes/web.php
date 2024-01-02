@@ -5,6 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Facades\Database;
+use App\Models\Option;
+use App\Models\Post;
 use App\Models\WpOption;
 use App\Models\WpUser;
 use App\Services\Searchers\UsersSearcher;
@@ -40,7 +42,12 @@ Route::get('/db', function () {
 });
 
 Route::get('/dev', function () {
-    // Do what thou wilt
+    Database::setDb('sites_clarku');
+    $admin = (new Option())->setTable('wp_1_options')
+        ->where('option_name', 'admin_email')->exists();
+
+//    !d($admin->toArray());
+    !d($admin);
 });
 
 Route::get('/remote', function () {

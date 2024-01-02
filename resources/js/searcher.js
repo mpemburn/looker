@@ -82,8 +82,8 @@ $(document).ready(function ($) {
 
             this.type.on('change', function (evt) {
                 let type = $(this).val();
-                let hideSearchInput = ($.inArray(type, ['list_all', 'plugins', 'themes', 'roles', 'updated'])  !== -1);
-                let showDropdown = ($.inArray(type, ['themes', 'plugins', 'roles'])  !== -1);
+                let hideSearchInput = ($.inArray(type, ['list_all', 'post_type', 'plugins', 'themes', 'roles', 'updated'])  !== -1);
+                let showDropdown = ($.inArray(type, ['themes', 'plugins', 'post_type', 'roles'])  !== -1);
                 let placeholder = hideSearchInput ? 'placeholder' : '';
                 self.found.html('');
                 self.results.html('');

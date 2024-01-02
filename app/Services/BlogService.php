@@ -77,7 +77,25 @@ class BlogService
         return array_values($plugins->unique()->sort()->toArray());
     }
 
-    public function getRolesList(string $database): array {
+    public function getPostTypeList(string $database): array
+    {
+        Database::setDb($database);
+
+        $postTypes = collect();
+
+        $this->getActiveBlogs()->each(function ($blog) use (&$postTypes) {
+            $posts = (new Post())->setTable('wp_' . $blog['blog_id'] . '_posts')
+                ->select('post_type')->distinct('post_type')->get();
+            $posts->each(function ($post) use (&$postTypes) {
+                $postTypes->put($post->post_type, $post->post_type);
+            });
+        });
+
+        return $postTypes->unique()->sort()->toArray();
+    }
+
+    public function getRolesList(string $database): array
+    {
         Database::setDb($database);
 
         $rawRoles = WpOption::where('option_name', 'wp_user_roles')->first();
@@ -87,6 +105,8 @@ class BlogService
         $dropdown = collect($roles)->map(function ($role, $key) {
             return $role['name'];
         });
+
+        $dropdown->put('site_administrator', 'Faux Site Adminstrator');
 
         return $dropdown->toArray();
     }

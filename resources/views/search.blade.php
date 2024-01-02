@@ -21,8 +21,10 @@
                                 <label for="type">Search in:
                                     <select id="type" name="type">
                                         <option value="posts">Posts</option>
+                                        <option value="post_type">Post Type</option>
                                         <option value="postmeta_values">Postmeta Values</option>
                                         <option value="postmeta_keys">Postmeta Keys</option>
+                                        <option value="comments">Comments</option>
                                         <option value="options">Option Values</option>
                                         <option value="option_name">Option Names</option>
                                         <option value="users">Users</option>

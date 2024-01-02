@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 
-class PostsSearcher extends BlogSearcher
+class PostTypeSearcher extends BlogSearcher
 {
     protected array $headers = [
         'ID',
@@ -31,9 +31,8 @@ class PostsSearcher extends BlogSearcher
             ->orderBy('ID');
 
         $posts->each(function (Post $post) use ($blogUrl, $blogId, &$foundSomething) {
-            $foundTitle = $this->wasFound($post->post_title);
-            $foundContent = $this->wasFound($post->post_content);
-            if ($foundContent || $foundTitle) {
+            $foundType = $this->wasFound($post->post_type);
+            if ($foundType) {
                 $foundSomething = true;
                 $this->found->push([
                     'blog_id' => $blogId,
@@ -77,7 +76,7 @@ class PostsSearcher extends BlogSearcher
             $html .= $this->truncateContent(strip_tags($page['content']));
             $html .= '      <div class="hidden">';
             $html .= $this->highlight(strip_tags($page['content']));
-            $html .= '      </div>';
+            $html .= '      <div>';
             $html .= '      </td>';
             $html .= '      <td class="align-top">';
             $html .= Carbon::parse($page['date'])->format('F j, Y');

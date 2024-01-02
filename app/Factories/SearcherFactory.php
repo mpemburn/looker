@@ -4,6 +4,7 @@ namespace App\Factories;
 
 use App\Interfaces\SearcherInterface;
 use App\Services\Searchers\BlogByIdSearcher;
+use App\Services\Searchers\CommentsSearcher;
 use App\Services\Searchers\ListAllBlogsSearcher;
 use App\Services\Searchers\MostRecentUpdateSearcher;
 use App\Services\Searchers\OptionNameSearcher;
@@ -12,6 +13,7 @@ use App\Services\Searchers\PluginSearcher;
 use App\Services\Searchers\PostMetaKeysSearcher;
 use App\Services\Searchers\PostMetaValuesSearcher;
 use App\Services\Searchers\PostsSearcher;
+use App\Services\Searchers\PostTypeSearcher;
 use App\Services\Searchers\ShortCodeSearcher;
 use App\Services\Searchers\ThemeSearcher;
 use App\Services\Searchers\UsersRolesSearcher;
@@ -23,8 +25,10 @@ class SearcherFactory
     {
         return match ($type) {
             'posts' => new PostsSearcher(),
+            'post_type' => new PostTypeSearcher(),
             'postmeta_values' => new PostMetaValuesSearcher(),
             'postmeta_keys' => new PostMetaKeysSearcher(),
+            'comments' => new CommentsSearcher(),
             'options' => new OptionsSearcher(),
             'option_name' => new OptionNameSearcher(),
             'shortcodes' => new ShortCodeSearcher(),
