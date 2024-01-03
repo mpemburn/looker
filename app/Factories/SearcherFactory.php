@@ -12,6 +12,7 @@ use App\Services\Searchers\OptionsSearcher;
 use App\Services\Searchers\PluginSearcher;
 use App\Services\Searchers\PostMetaKeysSearcher;
 use App\Services\Searchers\PostMetaValuesSearcher;
+use App\Services\Searchers\PostsByBlogIdSearcher;
 use App\Services\Searchers\PostsSearcher;
 use App\Services\Searchers\PostTypeSearcher;
 use App\Services\Searchers\ShortCodeSearcher;
@@ -25,6 +26,7 @@ class SearcherFactory
     {
         return match ($type) {
             'posts' => new PostsSearcher(),
+            'posts_by_blog_id' => new PostsByBlogIdSearcher(),
             'post_type' => new PostTypeSearcher(),
             'postmeta_values' => new PostMetaValuesSearcher(),
             'postmeta_keys' => new PostMetaKeysSearcher(),

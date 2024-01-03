@@ -10,7 +10,7 @@
             <div class="">
                 <div class="p-2">
                     <form id="search_form">
-                        @if (env('INSTALLED_TEST_DATABASES'))
+                        @if (env('DB_IS_REMOTE'))
                             <div id="sources">
                                 <input type="radio" name="source" value="remote" checked> Remote
                                 <input type="radio" name="source" value="local"> Local
@@ -21,6 +21,7 @@
                                 <label for="type">Search in:
                                     <select id="type" name="type">
                                         <option value="posts">Posts</option>
+                                        <option value="posts_by_blog_id">Posts by Blog ID</option>
                                         <option value="post_type">Post Type</option>
                                         <option value="postmeta_values">Postmeta Values</option>
                                         <option value="postmeta_keys">Postmeta Keys</option>

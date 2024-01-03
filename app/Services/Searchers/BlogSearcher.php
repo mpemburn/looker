@@ -17,7 +17,7 @@ abstract class BlogSearcher implements SearcherInterface
     protected string $searchText;
     protected string $searchRegex;
     protected bool $exact = false;
-    protected bool $verbose;
+    protected bool $verbose = false;
     protected array $headers = [];
     protected array $unique = [];
 

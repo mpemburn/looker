@@ -1,6 +1,14 @@
 $(document).ready(function ($) {
     class Searcher {
         constructor() {
+            this.placeholders = {
+                posts_by_blog_id: 'Enter Blog ID',
+                blog_id: 'Enter Blog ID',
+                postmeta_keys: 'Enter Meta Key',
+                option_name: 'Enter Option Name',
+            };
+            this.hideSearchTypes = ['list_all', 'post_type', 'plugins', 'themes', 'roles', 'updated'];
+            this.showDropdownTypes = ['themes', 'plugins', 'post_type', 'roles'];
             this.urlParams = new URLSearchParams(window.location.search);
             this.dashLinks = $('li[data-value]');
             this.source = $('input:radio[name="source"]');
@@ -56,7 +64,6 @@ $(document).ready(function ($) {
                     console.log(msg);
                 }
             });
-
         }
 
         setRadio() {
@@ -82,18 +89,24 @@ $(document).ready(function ($) {
 
             this.type.on('change', function (evt) {
                 let type = $(this).val();
-                let hideSearchInput = ($.inArray(type, ['list_all', 'post_type', 'plugins', 'themes', 'roles', 'updated'])  !== -1);
-                let showDropdown = ($.inArray(type, ['themes', 'plugins', 'post_type', 'roles'])  !== -1);
-                let placeholder = hideSearchInput ? 'placeholder' : '';
+                let hideSearchInput = self.hideSearchTypes.includes(type);
+                let showDropdown = self.showDropdownTypes.includes(type);
+                let autoClick = ['list_all', 'updated'].includes(type);
+                let hiddenValue = hideSearchInput ? 'hidden' : '';
+                let placeholder = self.placeholders[type] ? self.placeholders[type] : 'Enter search term';
                 self.found.html('');
                 self.results.html('');
-                self.search.val(placeholder);
+                self.search.val(hiddenValue);
+                self.search.attr('placeholder', placeholder);
                 self.searchSection.toggle(!hideSearchInput);
                 self.dropdownSection.toggle(showDropdown);
                 self.searchButton.prop('disabled', !hideSearchInput);
                 self.search.focus();
                 if (showDropdown) {
                     self.populateDropdown(type);
+                }
+                if (autoClick) {
+                    self.searchButton.trigger('click');
                 }
             });
 

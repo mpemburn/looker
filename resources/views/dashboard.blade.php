@@ -12,6 +12,7 @@
                     <strong>WordPress Looker</strong> is a tool for searching one or more databases on the following items:
                     <ul class="linked list-disc list-inside">
                         <li data-value="posts">Posts</li>
+                        <li data-value="posts_by_blog_id">Posts by Blog ID</li>
                         <li data-value="postmeta_values">Postmeta Values</li>
                         <li data-value="postmeta_keys">Postmeta Keys</li>
                         <li data-value="comments">Comments</li>
