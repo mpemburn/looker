@@ -3,6 +3,7 @@
 namespace App\Services\Searchers;
 
 use App\Models\Option;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 

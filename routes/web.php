@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\Curl;
 use App\Factories\SearcherFactory;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -13,6 +14,7 @@ use App\Services\Searchers\UsersSearcher;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,12 +44,10 @@ Route::get('/db', function () {
 });
 
 Route::get('/dev', function () {
-    Database::setDb('sites_clarku');
-    $admin = (new Option())->setTable('wp_1_options')
-        ->where('option_name', 'admin_email')->exists();
+    $response = \App\Factories\ListFactory::build('themes', 'www_clarku');
 
-//    !d($admin->toArray());
-    !d($admin);
+    !d($response);
+    // Do what thou wilt
 });
 
 Route::get('/remote', function () {

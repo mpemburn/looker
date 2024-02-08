@@ -14,6 +14,7 @@ use App\Services\Searchers\PostMetaKeysSearcher;
 use App\Services\Searchers\PostMetaValuesSearcher;
 use App\Services\Searchers\PostsByBlogIdSearcher;
 use App\Services\Searchers\PostsSearcher;
+use App\Services\Searchers\PostsSpecialSearcher;
 use App\Services\Searchers\PostTypeSearcher;
 use App\Services\Searchers\ShortCodeSearcher;
 use App\Services\Searchers\ThemeSearcher;

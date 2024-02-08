@@ -138,6 +138,14 @@ abstract class BlogSearcher implements SearcherInterface
         return ($count % 2) === 1 ? '#e2e8f0' : '#fffff';
     }
 
+    protected function makeEnclosingDiv(string $html): string
+    {
+        $start = '<div style="font-family: sans-serif">';
+        $end = '</div>';
+
+        return $start . $html . $end;
+    }
+
     public function getCount(): int
     {
         return $this->foundCount;

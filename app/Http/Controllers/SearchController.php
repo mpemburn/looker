@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Factories\ListFactory;
 use App\Factories\SearcherFactory;
-use App\Services\BlogService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Facades\Database;
 use Illuminate\Support\Facades\Config;
@@ -20,7 +21,7 @@ class SearchController extends Controller
         return view('search', ['databases' => $databases]);
     }
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $database = request('database');
         if (! $database) {
@@ -47,49 +48,17 @@ class SearchController extends Controller
         return response()->json(['error' => 'Nothing']);
     }
 
-    public function getList(Request $request)
+    public function getList(Request $request): ?JsonResponse
     {
         $database = request('database');
         $type = request('type');
 
+        Log::debug($type);
         if (! $database) {
             return response()->json(['error' => 'No Database']);;
         }
 
-        if ($type === 'plugins') {
-            return response()->json(['type' => $type, 'plugins' => $this->getPluginList($database)]);
-        }
-
-        if ($type === 'post_type') {
-            return response()->json(['type' => $type, 'post_type' => $this->getPostTypeList($database)]);
-        }
-
-        if ($type === 'roles') {
-            return response()->json(['type' => $type, 'roles' => $this->getRolesList($database)]);
-        }
-
-        if ($type === 'themes') {
-            return response()->json(['type' => $type, 'themes' => $this->getThemeList($database)]);
-        }
+        return ListFactory::build($type, $database);
     }
 
-    protected function getPluginList(string $database): array
-    {
-        return (new BlogService())->getPluginList($database);
-    }
-
-    protected function getPostTypeList(string $database): array
-    {
-        return (new BlogService())->getPostTypeList($database);
-    }
-
-    protected function getRolesList(string $database): array
-    {
-        return (new BlogService())->getRolesList($database);
-    }
-
-    protected function getThemeList(string $database): array
-    {
-        return (new BlogService())->getThemeList($database);
-    }
 }
