@@ -63,17 +63,17 @@ class ListAllBlogsSearcher extends BlogSearcher
     public function render(): string
     {
         $html = '';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $this->found->each(function ($blog) use (&$html) {
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top first-cell text-center">';
+            $html .= self::TABLE_FIRST_CELL;
             $html .= $blog['blog_id'];
             $html .= self::TABLE_CELL_END;
-            $html .= '      <td class="align-top text-left">';
+            $html .= self::TABLE_CELL_LEFT;
             $html .= $this->makeLink($blog['siteurl'] . $blog['path']);
             $html .= self::TABLE_CELL_END;
-            $html .= '      <td class="align-top text-left">';
+            $html .= self::TABLE_CELL_LEFT;
             $html .= $blog['admin_email'];
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_CELL_RIGHT;
@@ -101,7 +101,7 @@ class ListAllBlogsSearcher extends BlogSearcher
 
             $this->foundCount++;
         });
-        $html .= self::TABLE_END;
+        $html .= self::TABLE_TAG_END;
 
         $html = $this->makeEnclosingDiv($html);
 

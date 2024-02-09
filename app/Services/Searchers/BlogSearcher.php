@@ -11,13 +11,16 @@ use Illuminate\Support\Collection;
 abstract class BlogSearcher implements SearcherInterface
 {
 
-    const TABLE_TAG = '<table style="width: 100%;">';
+    const TABLE_TAG_START = '<table style="width: 100%;">';
+    const TABLE_ROW_START = '   <tr>';
+    const TABLE_FIRST_CELL = '      <td class="align-top first-cell text-center">';
     const TABLE_CELL_TOP = '      <td class="align-top">';
     const TABLE_CELL_CENTER = '      <td class="align-top text-center">';
+    const TABLE_CELL_LEFT = '      <td class="align-top text-left">';
     const TABLE_CELL_RIGHT = '      <td class="align-top text-right">';
     const TABLE_CELL_END = '      </td>';
     const TABLE_ROW_END = '   </tr>';
-    const TABLE_END = '</table>';
+    const TABLE_TAG_END = '</table>';
 
     protected Collection $found;
     protected Collection $notFound;
@@ -157,27 +160,6 @@ abstract class BlogSearcher implements SearcherInterface
     protected function setRowColor(int $count): string
     {
         return ($count % 2) === 1 ? '#e2e8f0' : '#ffffff';
-    }
-
-    protected function makeEnclosingDiv(string $html): string
-    {
-        $start = '<div style="font-family: sans-serif">';
-        $end = '</div>';
-
-        return $start . $html . $end;
-    }
-
-    protected function saveSearch(string $type, string $searchText, string $html): void
-    {
-        Database::setDb(env('DB_DATABASE'));
-        SavedSearch::create([
-            'database' => $this->database,
-            'type' => $type,
-            'search_text' => $searchText,
-            'results' => mb_convert_encoding($html, 'UTF-8', 'UTF-8')
-        ]);
-
-        Database::setDb($this->database);
     }
 
     public function getCount(): int

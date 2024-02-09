@@ -68,7 +68,9 @@
 
                     </div>
                     <div id="found"></div>
-                    <div id="results"></div>
+                    <div style="font-family: sans-serif">
+                        <div id="results"></div>
+                    </div>
                 </div>
             </div>
         </div>

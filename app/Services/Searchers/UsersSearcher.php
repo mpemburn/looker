@@ -50,8 +50,7 @@ class UsersSearcher extends BlogSearcher
 
         $found = $showNotFound ? $this->notFound : $this->found;
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
@@ -70,13 +69,11 @@ class UsersSearcher extends BlogSearcher
             $html .= self::TABLE_CELL_TOP;
             $html .= $this->getCapabilities($item['user_id']);
             $html .= self::TABLE_CELL_END;
-            $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
         });
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
         return $html;
     }

@@ -70,15 +70,11 @@ class UsersRolesSearcher extends BlogSearcher
 
         $found = $showNotFound ? $this->notFound : $this->found;
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
-            if (in_array($item['blog_id'], $this->unique)) {
-                //return;
-            }
-            $html .= '   <tr>';
-            $html .= '      <td class="align-top text-left">';
+            $html .= self::TABLE_ROW_START;
+            $html .= self::TABLE_CELL_LEFT;
             $html .= 'users["' . $item['path'] . '"]="' . $item['user_id'] . '"';
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_ROW_END;
@@ -86,8 +82,7 @@ class UsersRolesSearcher extends BlogSearcher
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         })->sortBy('blog_id');
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
         return $html;
     }
@@ -99,8 +94,7 @@ class UsersRolesSearcher extends BlogSearcher
 
         $found = $showNotFound ? $this->notFound : $this->found;
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html, &$ids) {
             if (in_array($item['blog_id'], $this->unique)) {
@@ -113,13 +107,13 @@ class UsersRolesSearcher extends BlogSearcher
             $html .= self::TABLE_CELL_CENTER;
             $html .= $item['blog_id'];
             $html .= self::TABLE_CELL_END;
-            $html .= '      <td class="align-top text-left">';
+            $html .= self::TABLE_CELL_LEFT;
             $html .= $this->makeLink($item['url']);
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_CELL_CENTER;
             $html .= $item['user_id'];
             $html .= self::TABLE_CELL_END;
-            $html .= '      <td class="align-top text-left">';
+            $html .= self::TABLE_CELL_LEFT;
             $html .= $item['user_email'];
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_CELL_RIGHT;
@@ -130,10 +124,8 @@ class UsersRolesSearcher extends BlogSearcher
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         })->sortBy('blog_id');
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
-        $idArray = $ids->implode(',');
         return $html;
     }
 

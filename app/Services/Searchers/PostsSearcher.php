@@ -55,7 +55,7 @@ class PostsSearcher extends BlogSearcher
         $html = '';
 
         $this->foundCount = 0;
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $this->found->each(function ($post) use (&$html) {
             $url = $post['blog_url'] . $post['post_name'];
@@ -85,10 +85,7 @@ class PostsSearcher extends BlogSearcher
 
             $this->foundCount++;
         });
-        $html .= self::TABLE_END;
-
-        $this->saveSearch('posts', $this->searchText, $html);
-        $html = $this->makeEnclosingDiv($html);
+        $html .= self::TABLE_TAG_END;
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }

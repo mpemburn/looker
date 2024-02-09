@@ -48,8 +48,7 @@ class ThemeSearcher extends BlogSearcher
 
         $found = $showNotFound ? $this->notFound : $this->found;
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
             $url = $item['blog_url'];
@@ -68,8 +67,7 @@ class ThemeSearcher extends BlogSearcher
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         });
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
         return $html;
     }

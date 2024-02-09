@@ -48,8 +48,7 @@ class OptionsSearcher extends BlogSearcher
 
         $found = $showNotFound ? $this->notFound : $this->found;
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
             if (in_array($item['blog_id'], $this->unique)) {
@@ -74,8 +73,7 @@ class OptionsSearcher extends BlogSearcher
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         });
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
         return $html;
     }

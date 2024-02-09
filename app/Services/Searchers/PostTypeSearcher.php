@@ -54,8 +54,7 @@ class PostTypeSearcher extends BlogSearcher
         $html = '';
 
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
@@ -85,8 +84,7 @@ class PostTypeSearcher extends BlogSearcher
 
             $this->foundCount++;
         });
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }

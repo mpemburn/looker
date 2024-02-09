@@ -46,11 +46,10 @@ class BlogByIdSearcher extends BlogSearcher
         $html = '';
 
         if ($this->data) {
-            $html .= '<div style="font-family: sans-serif">';
-            $html .= self::TABLE_TAG;
+            $html .= self::TABLE_TAG_START;
             $html .= $this->buildHeader();
-            $html .= '   <tr>';
-            $html .= '      <td class="align-top first-cell text-center">';
+            $html .= self::TABLE_ROW_START;
+            $html .= self::TABLE_FIRST_CELL;
             $html .= $this->data['blog_id'];
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_CELL_CENTER;
@@ -84,8 +83,7 @@ class BlogByIdSearcher extends BlogSearcher
             $html .= $this->toBool($this->data['deleted']);
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_ROW_END;
-            $html .= self::TABLE_END;
-            $html .= '<div>';
+            $html .= self::TABLE_TAG_END;
         }
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
@@ -98,5 +96,6 @@ class BlogByIdSearcher extends BlogSearcher
 
     protected function error(): void
     {
+        // No errors here
     }
 }

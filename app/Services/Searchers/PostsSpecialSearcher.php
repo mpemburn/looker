@@ -348,7 +348,7 @@ class PostsSpecialSearcher extends BlogSearcher
         $html = '';
 
         $this->foundCount = 0;
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $this->found->each(function ($page) use (&$html) {
             $hasLinks = $this->grabLinks($page['content']) !== '';
@@ -381,7 +381,7 @@ class PostsSpecialSearcher extends BlogSearcher
                 $this->foundCount++;
             }
         });
-        $html .= self::TABLE_END;
+        $html .= self::TABLE_TAG_END;
 
         $htmlPhpExcel = new HtmlPhpExcel($html);
         $htmlPhpExcel->process()->save('Faculty Bios Found.xlsx');

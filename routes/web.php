@@ -45,17 +45,7 @@ Route::get('/db', function () {
 });
 
 Route::get('/dev', function () {
-    $file = Storage::path('test2.html');
-    $filename = 'test2';
-    if (file_exists($file)) {
-        $html = file_get_contents($file);
-        $html = iconv(mb_detect_encoding($html, mb_detect_order(), true), "UTF-8", $html);
-
-//        $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
-        $htmlPhpExcel = new HtmlPhpExcel($html);
-        $htmlPhpExcel->process()->save($filename);
-    }
-    // Do what thou wilt
+      // Do what thou wilt
 });
 
 Route::get('/remote', function () {
@@ -66,7 +56,6 @@ Route::get('/remote', function () {
     $users = (new UsersSearcher())->run('cdonofrio')->render();
 
     echo $users;
-    // Do what thou wilt
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

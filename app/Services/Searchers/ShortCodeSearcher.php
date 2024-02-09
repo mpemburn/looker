@@ -53,8 +53,7 @@ class ShortCodeSearcher extends BlogSearcher
         $html = '';
 
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
-        $html .= self::TABLE_TAG;
+        $html .= self::TABLE_TAG_START;
         $html .= $this->buildHeader();
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
@@ -81,8 +80,7 @@ class ShortCodeSearcher extends BlogSearcher
 
             $this->foundCount++;
         });
-        $html .= self::TABLE_END;
-        $html .= '<div>';
+        $html .= self::TABLE_TAG_END;
 
         return $html;
     }
