@@ -18,8 +18,10 @@ class UsersSearcher extends BlogSearcher
         'Roles' => '70%'
     ];
 
-    public function run(?string $searchText, bool $exact = false, bool $verbose = false): BlogSearcher
+    public function run(?string $searchText, array $options): BlogSearcher
     {
+        $exact = $options['exact'] ?? false;
+
         $expression = $exact ? '=' : 'LIKE';
         $search = $exact ? $searchText : '%' . $searchText . '%';
 
@@ -53,27 +55,27 @@ class UsersSearcher extends BlogSearcher
         $html .= $this->buildHeader();
         $found->each(function ($item) use (&$html) {
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $item['user_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $item['user_login'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $item['user_email'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->isSuperAdmin($item['user_login']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->getCapabilities($item['user_id']);
-            $html .= '      </td>';
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
         });
-        $html .= '<table>';
+        $html .= self::TABLE_END;
         $html .= '<div>';
 
         return $html;

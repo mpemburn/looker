@@ -62,6 +62,9 @@ option {
 input[type=search] {
     outline-offset: 0;
 }
+input[name="excel"] {
+    width: 30rem;
+}
 
 div.hidden,
 img.hidden {
@@ -80,8 +83,20 @@ td.align-top {
     vertical-align: top!important;
 }
 
-#found {
+#type {
+    margin-left: 8px;
+}
+
+#found,
+#save_excel,
+#results {
+    position: relative;
+    top: 0.5rem;
     clear: left;
+}
+
+#save_excel {
+    display: none;
 }
 
 .highlight {

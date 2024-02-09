@@ -2,21 +2,31 @@
 
 namespace App\Services\Searchers;
 
+use App\Facades\Database;
 use App\Interfaces\SearcherInterface;
 use App\Models\Blog;
+use App\Models\SavedSearch;
 use Illuminate\Support\Collection;
 
 abstract class BlogSearcher implements SearcherInterface
 {
 
     const TABLE_TAG = '<table style="width: 100%;">';
+    const TABLE_CELL_TOP = '      <td class="align-top">';
+    const TABLE_CELL_CENTER = '      <td class="align-top text-center">';
+    const TABLE_CELL_RIGHT = '      <td class="align-top text-right">';
+    const TABLE_CELL_END = '      </td>';
+    const TABLE_ROW_END = '   </tr>';
+    const TABLE_END = '</table>';
 
     protected Collection $found;
     protected Collection $notFound;
     protected int $foundCount = 0;
+    protected string $database;
     protected string $searchText;
     protected string $searchRegex;
     protected bool $exact = false;
+    protected bool $showRaw = false;
     protected bool $verbose = false;
     protected array $headers = [];
     protected array $unique = [];
@@ -31,7 +41,14 @@ abstract class BlogSearcher implements SearcherInterface
         $this->notFound = collect();
     }
 
-    public function run(?string $searchText, bool $exact = false, bool $verbose = false): self
+    public function setDatabase(string $database): void
+    {
+        Database::setDb($database);
+
+        $this->database = $database;
+    }
+
+    public function run(?string $searchText, array $options): self
     {
         if (! $searchText) {
             $this->error();
@@ -39,8 +56,9 @@ abstract class BlogSearcher implements SearcherInterface
             return $this;
         }
 
-        $this->verbose = $verbose;
-        $this->exact = $exact;
+        $this->verbose = $options['verbose'] ?? false;
+        $this->exact = $options['exact'] ?? false;
+        $this->showRaw = $options['show_raw'] ?? false;
 
         $blogs = Blog::where('archived', 0)
             ->where('deleted', 0)
@@ -61,7 +79,6 @@ abstract class BlogSearcher implements SearcherInterface
     {
         if ($this->exact) {
             // Only return exact word matches
-//            return preg_match('/\b' . $this->searchText . '\b/i', $testText);
             return $this->searchText === $testText;
         }
 
@@ -86,7 +103,7 @@ abstract class BlogSearcher implements SearcherInterface
             $html .= $header;
             $html .= '      </th>';
         }
-        $html .= '   </tr>';
+        $html .= self::TABLE_ROW_END;
 
         return $html;
     }
@@ -108,6 +125,10 @@ abstract class BlogSearcher implements SearcherInterface
 
     protected function truncateContent(string $content): string
     {
+        if (! $this->showRaw) {
+            $content = strip_tags($content);
+        }
+
         $length = $this->verbose ? null : 100;
 
         $position = stripos($content, $this->searchText);
@@ -135,7 +156,7 @@ abstract class BlogSearcher implements SearcherInterface
 
     protected function setRowColor(int $count): string
     {
-        return ($count % 2) === 1 ? '#e2e8f0' : '#fffff';
+        return ($count % 2) === 1 ? '#e2e8f0' : '#ffffff';
     }
 
     protected function makeEnclosingDiv(string $html): string
@@ -144,6 +165,19 @@ abstract class BlogSearcher implements SearcherInterface
         $end = '</div>';
 
         return $start . $html . $end;
+    }
+
+    protected function saveSearch(string $type, string $searchText, string $html): void
+    {
+        Database::setDb(env('DB_DATABASE'));
+        SavedSearch::create([
+            'database' => $this->database,
+            'type' => $type,
+            'search_text' => $searchText,
+            'results' => mb_convert_encoding($html, 'UTF-8', 'UTF-8')
+        ]);
+
+        Database::setDb($this->database);
     }
 
     public function getCount(): int

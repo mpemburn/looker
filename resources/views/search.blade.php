@@ -39,7 +39,7 @@
                                     </select>
                                 </label>
                                 <label for="database">Database:
-                                    <select name="database">
+                                    <select id="database" name="database">
                                         @foreach($databases as $label => $dbName)
                                             <option value="{{ $dbName }}">{{ $label }}</option>
                                         @endforeach
@@ -48,7 +48,8 @@
                             </div>
                             <div id="search_section" class="form-parts">
                                 <input id="search" type="search" name="text" placeholder="Enter search term"><br>
-                                <input type="checkbox" name="exact"> Exact word match
+                                <input type="checkbox" name="exact"> Exact word match<br>
+                                <input type="checkbox" name="show_raw"> Show HTML
                             </div>
                             <div id="dropdown_section" class="form-parts">
                                 <strong><span id="dropdown_title"></span></strong>
@@ -61,6 +62,11 @@
                                      height="24">
                             </div>
                     </form>
+                    <div id="save_excel">
+                        <label for="type">Save Excel: <input type="text" name="excel"> .xlsx</label>
+                        <button id="excel_btn" class="btn bg-blue-600 text-white hover:bg-blue-600 py-3 px-6 leading-tight">Download</button>
+
+                    </div>
                     <div id="found"></div>
                     <div id="results"></div>
                 </div>

@@ -57,24 +57,24 @@ class OptionsSearcher extends BlogSearcher
             }
             $url = $item['blog_url'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $item['blog_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->makeLink($url);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $item['option_name'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->truncateContent($item['option_value']);
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         });
-        $html .= '<table>';
+        $html .= self::TABLE_END;
         $html .= '<div>';
 
         return $html;

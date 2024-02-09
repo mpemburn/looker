@@ -58,33 +58,33 @@ class CommentsSearcher extends BlogSearcher
         $this->found->each(function ($comment) use (&$html) {
             $url = $comment['blog_url'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $comment['blog_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->makeLink($url);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $comment['post_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->truncateContent(strip_tags($comment['content']));
-            $html .= '      </td>';
+            $html .= self::TABLE_CELL_END;
             $html .= '      <div class="hidden">';
             $html .= $this->highlight(strip_tags($comment['content']));
             $html .= '      </div>';
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $comment['author_email'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= Carbon::parse($comment['date'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
         });
-        $html .= '<table>';
+        $html .= self::TABLE_END;
         $html .= '<div>';
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');

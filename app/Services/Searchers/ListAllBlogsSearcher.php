@@ -11,8 +11,8 @@ class ListAllBlogsSearcher extends BlogSearcher
 {
     protected array $headers = [
         'Blog&nbsp;ID',
+        'URL',
         'Admin&nbsp;Email',
-        'Path',
         'Created',
         'Updated',
         'Public',
@@ -22,7 +22,7 @@ class ListAllBlogsSearcher extends BlogSearcher
         'Deleted',
     ];
 
-    public function run(?string $searchText, bool $exact = false, bool $verbose = false): BlogSearcher
+    public function run(?string $searchText, array $options): BlogSearcher
     {
         $blogs = WpBlogs::all();
 
@@ -40,6 +40,7 @@ class ListAllBlogsSearcher extends BlogSearcher
                 'blog_id' => $blog['blog_id'],
                 'admin_email' => $admin_email,
                 'path' => $blog['path'],
+                'siteurl' => 'https://' . $blog['domain'],
                 'registered' => $blog['registered'],
                 'last_updated' => $blog['last_updated'],
                 'public' => $blog['public'],
@@ -62,47 +63,47 @@ class ListAllBlogsSearcher extends BlogSearcher
     public function render(): string
     {
         $html = '';
-        $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
         $html .= $this->buildHeader();
         $this->found->each(function ($blog) use (&$html) {
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
             $html .= '      <td class="align-top first-cell text-center">';
             $html .= $blog['blog_id'];
-            $html .= '      </td>';
+            $html .= self::TABLE_CELL_END;
+            $html .= '      <td class="align-top text-left">';
+            $html .= $this->makeLink($blog['siteurl'] . $blog['path']);
+            $html .= self::TABLE_CELL_END;
             $html .= '      <td class="align-top text-left">';
             $html .= $blog['admin_email'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-left">';
-            $html .= $blog['path'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-right">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_RIGHT;
             $html .= Carbon::parse($blog['registered'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-right">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_RIGHT;
             $html .= Carbon::parse($blog['last_updated'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($blog['public']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($blog['archived']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($blog['mature']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($blog['spam']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($blog['deleted']);
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
         });
-        $html .= '<table>';
-        $html .= '<div>';
+        $html .= self::TABLE_END;
+
+        $html = $this->makeEnclosingDiv($html);
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }

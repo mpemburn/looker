@@ -23,7 +23,7 @@ class BlogByIdSearcher extends BlogSearcher
 
     protected ?array $data = null;
 
-    public function run(?string $searchText, bool $exact = false, bool $verbose = false): BlogSearcher
+    public function run(?string $searchText, array $options): BlogSearcher
     {
         $blog = WpBlogs::select("*")
             ->where('blog_id', $searchText);
@@ -52,39 +52,39 @@ class BlogByIdSearcher extends BlogSearcher
             $html .= '   <tr>';
             $html .= '      <td class="align-top first-cell text-center">';
             $html .= $this->data['blog_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->data['site_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->data['domain'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->data['path'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= Carbon::parse($this->data['registered'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= Carbon::parse($this->data['last_updated'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($this->data['public']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($this->data['archived']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($this->data['mature']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($this->data['spam']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $this->toBool($this->data['deleted']);
-            $html .= '      </td>';
-            $html .= '   </tr>';
-            $html .= '<table>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
+            $html .= self::TABLE_END;
             $html .= '<div>';
         }
 

@@ -55,39 +55,40 @@ class PostsSearcher extends BlogSearcher
         $html = '';
 
         $this->foundCount = 0;
-        $html .= '<div style="font-family: sans-serif">';
         $html .= self::TABLE_TAG;
         $html .= $this->buildHeader();
-        $this->found->each(function ($page) use (&$html) {
-            $url = $page['blog_url'] . $page['post_name'];
+        $this->found->each(function ($post) use (&$html) {
+            $url = $post['blog_url'] . $post['post_name'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top text-center">';
-            $html .= $page['blog_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
-            $html .= $page['post_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_CENTER;
+            $html .= $post['blog_id'];
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
+            $html .= $post['post_id'];
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->makeLink($url);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
-            $html .= $this->highlight($page['title']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
-            $html .= $this->truncateContent(strip_tags($page['content']));
-            $html .= '      <div class="hidden">';
-            $html .= $this->highlight(strip_tags($page['content']));
-            $html .= '      </div>';
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
-            $html .= Carbon::parse($page['date'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
+            $html .= $this->highlight($post['title']);
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
+            $html .= $this->truncateContent($post['content']);
+//            $html .= '      <div class="hidden">';
+//            $html .= $this->highlight(strip_tags($post['content']));
+//            $html .= '      </div>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
+            $html .= Carbon::parse($post['date'])->format('F j, Y');
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
         });
-        $html .= '<table>';
-        $html .= '<div>';
+        $html .= self::TABLE_END;
+
+        $this->saveSearch('posts', $this->searchText, $html);
+        $html = $this->makeEnclosingDiv($html);
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }

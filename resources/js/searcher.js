@@ -17,20 +17,26 @@ $(document).ready(function ($) {
             this.dropdown = $('#dropdown');
             this.searchSection = $('#search_section');
             this.dropdownSection = $('#dropdown_section');
+            this.excel = $('#save_excel');
             this.found = $('#found');
             this.results = $('#results');
             this.loading = $('#loading');
             this.searchButton = $('#search_btn');
+            this.excelButton = $('#excel_btn');
             this.search = $('[name="text"]');
-            this.database = $('[name="database"]');
+            this.database = $('#database');
+            this.excelName = $('[name="excel"]');
             this.search.focus();
+            this.currentDatabase;
+            this.currentType;
+            this.currentSearch;
 
             this.dropdownSection.hide();
 
             this.setRadio();
             this.addListeners();
             this.gotoType();
-         }
+        }
 
         gotoType() {
             let type = this.urlParams.get('type');
@@ -53,7 +59,7 @@ $(document).ready(function ($) {
                     let result = data[data.type];
                     let label = data.type.charAt(0).toUpperCase() + data.type.slice(1);
                     self.dropdown.append($("<option />").text('Select from ' + label));
-                    $.each(result, function(key, text) {
+                    $.each(result, function (key, text) {
                         let value = typeof key === 'number' ? text : key;
                         self.dropdown.append($("<option />").val(value).text(text));
                     });
@@ -74,6 +80,27 @@ $(document).ready(function ($) {
             }
         }
 
+        base64ToBlob(base64, mimetype, slicesize) {
+            if (!window.atob || !window.Uint8Array) {
+                // The current browser doesn't have the atob function. Cannot continue
+                return null;
+            }
+            mimetype = mimetype || '';
+            slicesize = slicesize || 512;
+            let bytechars = atob(base64);
+            let bytearrays = [];
+            for (let offset = 0; offset < bytechars.length; offset += slicesize) {
+                let slice = bytechars.slice(offset, offset + slicesize);
+                let bytenums = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    bytenums[i] = slice.charCodeAt(i);
+                }
+                let bytearray = new Uint8Array(bytenums);
+                bytearrays[bytearrays.length] = bytearray;
+            }
+            return new Blob(bytearrays, {type: mimetype});
+        }
+
         addListeners() {
             let self = this;
 
@@ -89,6 +116,7 @@ $(document).ready(function ($) {
 
             this.type.on('change', function (evt) {
                 let type = $(this).val();
+                self.currentType = type;
                 let hideSearchInput = self.hideSearchTypes.includes(type);
                 let showDropdown = self.showDropdownTypes.includes(type);
                 let autoClick = ['list_all', 'updated'].includes(type);
@@ -102,6 +130,7 @@ $(document).ready(function ($) {
                 self.dropdownSection.toggle(showDropdown);
                 self.searchButton.prop('disabled', !hideSearchInput);
                 self.search.focus();
+                self.excel.hide();
                 if (showDropdown) {
                     self.populateDropdown(type);
                 }
@@ -112,7 +141,8 @@ $(document).ready(function ($) {
 
             this.database.on('change', function (evt) {
                 let type = self.type.val();
-                let showDropdown = ($.inArray(type, ['themes', 'plugins'])  !== -1);
+                let showDropdown = ($.inArray(type, ['themes', 'plugins']) !== -1);
+                self.currentDatabase = $(this).val();
                 if (showDropdown) {
                     self.populateDropdown(type);
                 }
@@ -129,6 +159,10 @@ $(document).ready(function ($) {
                 self.loading.removeClass('hidden');
                 self.found.html('');
                 self.results.html('');
+                self.excel.hide();
+                self.currentDatabase = self.database.val();
+                self.currentType = self.type.val();
+                self.currentSearch = self.search.val();
 
                 self.ajaxSetup()
                 $.ajax({
@@ -142,6 +176,10 @@ $(document).ready(function ($) {
                         self.found.html('<strong>Total Found: ' + data.found + '</strong>');
                         if (data.found > 0) {
                             self.results.html(data.html);
+                            self.excelName.val(data.filename);
+                        }
+                        if (!['updated'].includes(self.currentType)) {
+                            self.excel.show();
                         }
                         console.log(data);
                     },
@@ -154,9 +192,46 @@ $(document).ready(function ($) {
 
             this.search.on('keyup', function (evt) {
                 let hasText = $(this).val() !== '';
-                self.searchButton.prop('disabled', ! hasText);
+                self.searchButton.prop('disabled', !hasText);
+            });
+
+            this.excelButton.on('click', function (evt) {
+                self.ajaxSetup()
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "/download_excel",
+                    data: $.param({
+                        database: self.currentDatabase,
+                        type: self.currentType,
+                        search: self.currentSearch,
+                        filename: self.excelName.val()
+                    }),
+                    processData: false,
+                    success: function (response) {
+                        console.log(response);
+                        if (response.error) {
+                            alert('ERROR: Unable to create Excel file: \n' + response.error);
+                            return;
+                        }
+                        let a = document.createElement('a');
+                        if (window.URL && window.Blob && ('download' in a) && window.atob) {
+                            // Do it the HTML5 compliant way
+                            let blob = self.base64ToBlob(response.data, response.mime_type);
+                            let url = window.URL.createObjectURL(blob);
+                            a.href = url;
+                            a.download = response.filename;
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                    }
+                });
             });
         }
+
         ajaxSetup() {
             $.ajaxSetup({
                 headers: {

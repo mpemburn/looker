@@ -21,7 +21,7 @@ class UsersRolesSearcher extends BlogSearcher
 //        'Updated' => '25%',
     ];
 
-    public function run(?string $searchText, bool $exact = false, bool $verbose = false): BlogSearcher
+    public function run(?string $searchText, array $options): BlogSearcher
     {
         Log::debug('%"' . $searchText . '"%');
         $userRoles = WpUsermeta::where('meta_key', 'LIKE', 'wp_%_capabilities')
@@ -80,13 +80,13 @@ class UsersRolesSearcher extends BlogSearcher
             $html .= '   <tr>';
             $html .= '      <td class="align-top text-left">';
             $html .= 'users["' . $item['path'] . '"]="' . $item['user_id'] . '"';
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         })->sortBy('blog_id');
-        $html .= '<table>';
+        $html .= self::TABLE_END;
         $html .= '<div>';
 
         return $html;
@@ -110,27 +110,27 @@ class UsersRolesSearcher extends BlogSearcher
                 $ids->push($item['user_id']);
             }
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $item['blog_id'];
-            $html .= '      </td>';
+            $html .= self::TABLE_CELL_END;
             $html .= '      <td class="align-top text-left">';
             $html .= $this->makeLink($item['url']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $item['user_id'];
-            $html .= '      </td>';
+            $html .= self::TABLE_CELL_END;
             $html .= '      <td class="align-top text-left">';
             $html .= $item['user_email'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-right">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_RIGHT;
             $html .= Carbon::parse($item['updated'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
             $this->unique[] = $item['blog_id'];
         })->sortBy('blog_id');
-        $html .= '<table>';
+        $html .= self::TABLE_END;
         $html .= '<div>';
 
         $idArray = $ids->implode(',');

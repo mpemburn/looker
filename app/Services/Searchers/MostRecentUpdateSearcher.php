@@ -73,26 +73,26 @@ class MostRecentUpdateSearcher extends BlogSearcher
         $this->found->each(function ($page) use (&$html) {
             $url = $page['blog_url'] . $page['post_name'];
             $html .= '   <tr style="background-color: ' . $this->setRowColor($this->foundCount) . ';">';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $page['blog_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= $page['post_id'];
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->makeLink($url);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_TOP;
             $html .= $this->highlight($page['title']);
-            $html .= '      </td>';
-            $html .= '      <td class="align-top text-center">';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_CELL_CENTER;
             $html .= Carbon::parse($page['date'])->format('F j, Y');
-            $html .= '      </td>';
-            $html .= '   </tr>';
+            $html .= self::TABLE_CELL_END;
+            $html .= self::TABLE_ROW_END;
 
             $this->foundCount++;
         });
-        $html .= '<table>';
+        $html .= self::TABLE_END;
         $html .= '<div>';
 
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');

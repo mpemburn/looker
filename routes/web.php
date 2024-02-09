@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Ticketpark\HtmlPhpExcel\HtmlPhpExcel;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,9 +45,16 @@ Route::get('/db', function () {
 });
 
 Route::get('/dev', function () {
-    $response = \App\Factories\ListFactory::build('themes', 'www_clarku');
+    $file = Storage::path('test2.html');
+    $filename = 'test2';
+    if (file_exists($file)) {
+        $html = file_get_contents($file);
+        $html = iconv(mb_detect_encoding($html, mb_detect_order(), true), "UTF-8", $html);
 
-    !d($response);
+//        $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
+        $htmlPhpExcel = new HtmlPhpExcel($html);
+        $htmlPhpExcel->process()->save($filename);
+    }
     // Do what thou wilt
 });
 
@@ -74,5 +82,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/get_list', [SearchController::class, 'getList'])->name('get_list');
 Route::post('/do_search', [SearchController::class, 'search'])->name('do_search');
+Route::post('/download_excel', [SearchController::class, 'getExcel'])->name('download_excel');
 
 require __DIR__.'/auth.php';
