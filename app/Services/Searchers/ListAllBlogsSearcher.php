@@ -103,8 +103,6 @@ class ListAllBlogsSearcher extends BlogSearcher
         });
         $html .= self::TABLE_TAG_END;
 
-        $html = $this->makeEnclosingDiv($html);
-
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }
 

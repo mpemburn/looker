@@ -386,8 +386,6 @@ class PostsSpecialSearcher extends BlogSearcher
         $htmlPhpExcel = new HtmlPhpExcel($html);
         $htmlPhpExcel->process()->save('Faculty Bios Found.xlsx');
 
-        $html = $this->makeEnclosingDiv($html);
-
         return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }
 
