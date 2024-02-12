@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Factories\ListFactory;
-use App\Models\SavedSearch;
 use App\Services\ExcelService;
 use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
 use App\Facades\Database;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
-use Ticketpark\HtmlPhpExcel\HtmlPhpExcel;
 
 class SearchController extends Controller
 {

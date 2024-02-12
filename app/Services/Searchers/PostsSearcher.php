@@ -74,9 +74,6 @@ class PostsSearcher extends BlogSearcher
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_CELL_TOP;
             $html .= $this->truncateContent($post['content']);
-//            $html .= '      <div class="hidden">';
-//            $html .= $this->highlight(strip_tags($post['content']));
-//            $html .= '      </div>';
             $html .= self::TABLE_CELL_END;
             $html .= self::TABLE_CELL_TOP;
             $html .= Carbon::parse($post['date'])->format('F j, Y');

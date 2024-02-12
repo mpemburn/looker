@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 abstract class BlogSearcher implements SearcherInterface
 {
 
-    const TABLE_TAG_START = '<table style="width: 100%;">';
+    const TABLE_TAG_START = '<table id="results_table">';
     const TABLE_ROW_START = '   <tr>';
     const TABLE_FIRST_CELL = '      <td class="align-top first-cell text-center">';
     const TABLE_CELL_TOP = '      <td class="align-top">';
@@ -100,6 +100,7 @@ abstract class BlogSearcher implements SearcherInterface
             ? $this->headers
             : array_keys($this->headers);
 
+        $html .= '      <thead>';
         $html .= '   <tr style="background-color: #e2e8f0;">';
         foreach ($headers as $header) {
             $html .= '      <th>';
@@ -107,6 +108,7 @@ abstract class BlogSearcher implements SearcherInterface
             $html .= '      </th>';
         }
         $html .= self::TABLE_ROW_END;
+        $html .= '      </thead>';
 
         return $html;
     }

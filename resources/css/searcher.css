@@ -59,12 +59,27 @@ option {
     color: #000;
 }
 
-input[type=search] {
+input,
+select {
+    padding: 4px 5px !important;
+}
+#search {
     outline-offset: 0;
 }
-input[name="excel"] {
+#excel_filename {
     width: 30rem;
 }
+
+/* Datatables override */
+div.dataTables_length {
+    position: relative;
+    top: 2rem;
+    max-width: 50%;
+}
+select[name="results_table_length"] {
+    min-width: 5rem;
+}
+
 
 div.hidden,
 img.hidden {
@@ -76,6 +91,9 @@ div.form-parts {
     margin-left: 3px;
 }
 
+table.results {
+    width: 100%;
+}
 td {
     font-size: 11pt;
 }
@@ -84,7 +102,12 @@ td.align-top {
 }
 
 #type {
+    min-width: 12rem;
     margin-left: 8px;
+}
+
+#database {
+    min-width: 12rem;
 }
 
 #found,

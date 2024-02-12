@@ -176,6 +176,7 @@ $(document).ready(function ($) {
                         self.found.html('<strong>Total Found: ' + data.found + '</strong>');
                         if (data.found > 0) {
                             self.results.html(data.html);
+                            new DataTable('#results_table');
                             self.excelName.val(data.filename);
                         }
                         if (!['updated'].includes(self.currentType)) {

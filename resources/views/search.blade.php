@@ -56,15 +56,15 @@
                                 <select id="dropdown"></select>
                             </div>
                             <div class="form-parts">
-                                <button id="search_btn" class="btn bg-blue-600 text-white hover:bg-blue-600 py-3 px-6 leading-tight" disabled>Search</button>
+                                <button id="search_btn" class="btn bg-blue-600 text-white hover:bg-blue-600 py-2 px-6 leading-tight" disabled>Search</button>
                                 <img id="loading" class="hidden"
                                      src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="24"
                                      height="24">
                             </div>
                     </form>
                     <div id="save_excel">
-                        <label for="type">Save Excel: <input type="text" name="excel"> .xlsx</label>
-                        <button id="excel_btn" class="btn bg-blue-600 text-white hover:bg-blue-600 py-3 px-6 leading-tight">Download</button>
+                        <label for="type">Save Excel: <input id="excel_filename" type="text" name="excel"> .xlsx</label>
+                        <button id="excel_btn" class="btn bg-blue-600 text-white hover:bg-blue-600 py-2 px-6 leading-tight">Download</button>
 
                     </div>
                     <div id="found"></div>
